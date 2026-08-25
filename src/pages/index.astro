@@ -517,6 +517,38 @@ const jsonLd = {
           video.pause();
           video.load();
         });
+      } else {
+        // ---- 1c. Autoplay que realmente começa ----
+        // O atributo sozinho não basta: o vídeo está abaixo da dobra e o
+        // navegador adia (ou recusa) o play de quem não está visível. O
+        // observador dispara quando ele aparece; se a política do navegador
+        // ainda assim recusar, os controles entram para a pessoa dar play em
+        // vez de ficar com um pôster parado que parece imagem.
+        document.querySelectorAll('video[autoplay]').forEach((v) => {
+          const video = v as HTMLVideoElement;
+          // Autoplay só é permitido sem som — e o vídeo não tem áudio.
+          video.muted = true;
+
+          const tocar = () => {
+            video.play().catch(() => {
+              video.controls = true;
+            });
+          };
+
+          if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver(
+              (entradas) => {
+                for (const entrada of entradas) {
+                  if (entrada.isIntersecting) tocar();
+                }
+              },
+              { threshold: 0.25 }
+            );
+            obs.observe(video);
+          } else {
+            tocar();
+          }
+        });
       }
 
       // ---- 2. Máscara de WhatsApp: (21) 98765-4321 ----
