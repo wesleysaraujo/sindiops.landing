@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@astrojs/node": "^9.0.0",
-    "@rolldown/binding-darwin-x64": "^1.2.4",
     "@tailwindcss/vite": "^4.0.0",
     "astro": "^5.0.0",
     "tailwindcss": "^4.0.0"
