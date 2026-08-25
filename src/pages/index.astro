@@ -602,6 +602,41 @@ const jsonLd = {
         campoWhats.value = mascarado;
       });
 
+      // ---- 2b. Ponte com o GTM ----
+      // O GTM não enxerga nada disto sozinho: o envio é por fetch (não há
+      // navegação para uma página de obrigado) e o gatilho nativo de vídeo do
+      // GTM só entende YouTube. Cada `push` aqui vira um gatilho de evento
+      // personalizado lá. O array é criado se ainda não existir — em `astro
+      // dev` o GTM não carrega, e sem isto o push quebraria o script inteiro.
+      type EventoRastreado = Record<string, unknown> & { event: string };
+
+      function rastrear(evento: EventoRastreado) {
+        const w = window as unknown as { dataLayer?: EventoRastreado[] };
+        w.dataLayer = w.dataLayer || [];
+        w.dataLayer.push(evento);
+      }
+
+      // ---- 2c. Progresso do vídeo da demonstração ----
+      // Quartis, uma vez cada: quem chega aos 50% viu a pergunta virar
+      // resposta com o artigo citado, que é a prova que a página promete.
+      document.querySelectorAll('video').forEach((v) => {
+        const video = v as HTMLVideoElement;
+        const marcosVistos = new Set<number>();
+
+        video.addEventListener('timeupdate', () => {
+          if (!video.duration || !isFinite(video.duration)) return;
+
+          const percentual = (video.currentTime / video.duration) * 100;
+
+          for (const marco of [25, 50, 75, 100]) {
+            if (percentual >= marco && !marcosVistos.has(marco)) {
+              marcosVistos.add(marco);
+              rastrear({ event: 'video_progresso', marco_percentual: marco });
+            }
+          }
+        });
+      });
+
       // ---- 3. utm_source da query string ----
       const utm = new URLSearchParams(location.search).get('utm_source');
       const campoUtm = document.getElementById('utm_source') as HTMLInputElement | null;
@@ -638,6 +673,19 @@ const jsonLd = {
         input?.setAttribute('aria-invalid', texto ? 'true' : 'false');
       }
 
+      // Uma vez só: interessa saber quantos começam a preencher, não quantas
+      // vezes a pessoa clicou de campo em campo.
+      let inicioRegistrado = false;
+      form?.addEventListener(
+        'input',
+        () => {
+          if (inicioRegistrado) return;
+          inicioRegistrado = true;
+          rastrear({ event: 'form_start' });
+        },
+        { once: false }
+      );
+
       form?.addEventListener('submit', async (evento) => {
         evento.preventDefault();
         const dados = new FormData(form);
@@ -650,6 +698,7 @@ const jsonLd = {
           if (erro && !primeiroErro) primeiroErro = campo;
         }
         if (primeiroErro) {
+          rastrear({ event: 'lead_erro', origem_erro: 'validacao', campo_erro: primeiroErro });
           const alvo = document.getElementById(primeiroErro) || document.getElementById('grupo-condominios');
           alvo?.scrollIntoView({ block: 'center', behavior: 'smooth' });
           (document.getElementById(primeiroErro) as HTMLElement | null)?.focus?.();
@@ -668,6 +717,13 @@ const jsonLd = {
           });
 
           if (resposta.ok) {
+            // A conversão. Vai com a faixa de condomínios e a origem para o
+            // relatório dizer que tipo de síndico converte, e não só quantos.
+            rastrear({
+              event: 'lead_enviado',
+              faixa_condominios: valores.condominios || null,
+              origem: valores.utm_source || 'direto',
+            });
             form.classList.add('hidden');
             const sucesso = document.getElementById('sucesso');
             sucesso?.classList.remove('hidden');
@@ -677,10 +733,16 @@ const jsonLd = {
             for (const [campo, texto] of Object.entries(corpo.erros || {})) {
               mostrarErro(campo, texto as string);
             }
+            rastrear({
+              event: 'lead_erro',
+              origem_erro: 'servidor',
+              campo_erro: Object.keys(corpo.erros || {})[0] || null,
+            });
           } else {
             throw new Error('erro-servidor');
           }
         } catch {
+          rastrear({ event: 'lead_erro', origem_erro: 'rede', campo_erro: null });
           if (erroGeral) {
             erroGeral.textContent =
               'Não consegui enviar agora. Espere um instante e toque de novo no botão — seus dados continuam preenchidos.';
