@@ -16,8 +16,7 @@ Em produção: `node dist/server/entry.mjs` (adapter Node standalone; use `PORT`
 
 ## Onde ficam os cadastros
 
-Cada envio do formulário é gravado em `data/waitlist.jsonl` (uma linha JSON por
-cadastro, com `utm_source` e horário). Sem banco de dados por enquanto.
+Cada envio do formulário é enviado para API do sindiops, que grava no banco de dados. O endpoint é `POST /api/leads`
 
 ## Placeholders pendentes
 
