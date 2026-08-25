@@ -4,6 +4,22 @@ import '../styles/global.css';
 // SindiOps — landing de acesso antecipado.
 // Página 100% estática (SEO): o HTML sai pronto do build.
 
+// Google Tag Manager. O contêiner é público (aparece no HTML de qualquer
+// site que o use), então fica aqui como padrão e `PUBLIC_GTM_ID` sobrescreve
+// quando for preciso trocar. Só carrega no build de produção: navegação em
+// `astro dev` entraria nos relatórios como visita real.
+const gtmId = import.meta.env.PUBLIC_GTM_ID ?? 'GTM-58BTPMWB';
+const gtmAtivo = import.meta.env.PROD && Boolean(gtmId);
+
+// O snippet vai como string e entra por `set:html`: dentro de uma expressão
+// JSX, as chaves do próprio código JavaScript seriam lidas como expressão
+// Astro e o script sairia quebrado no HTML.
+const gtmSnippet = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`;
+
 const faq = [
   {
     p: 'Substitui o sistema que eu já uso?',
@@ -66,6 +82,13 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!--
+      Google Tag Manager. `is:inline` é obrigatório: sem ele o Astro trataria
+      isto como módulo e o carregamento sairia do lugar que o GTM espera.
+    -->
+    {gtmAtivo && <script is:inline set:html={gtmSnippet} />}
+
     <title>SindiOps — Respostas da convenção do condomínio, com o artigo citado</title>
     <meta
       name="description"
@@ -100,6 +123,21 @@ const jsonLd = {
   </head>
 
   <body class="bg-papel text-tinta font-corpo antialiased">
+    <!-- Google Tag Manager (noscript): precisa ser o primeiro nó do body -->
+    {
+      gtmAtivo && (
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+            title="Google Tag Manager"
+          />
+        </noscript>
+      )
+    }
+
     <!-- ============ Marca ============ -->
     <header class="mx-auto w-full max-w-6xl px-5 pt-6 md:px-8">
       <p class="font-display text-xl font-extrabold tracking-tight">
