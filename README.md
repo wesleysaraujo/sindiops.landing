@@ -32,3 +32,10 @@ Cada envio do formulário é enviado para API do sindiops, que grava no banco de
 - Fontes self-hosted em `public/fonts` (Besley, Atkinson Hyperlegible, Courier Prime)
 - Sem bibliotecas de animação: só CSS + IntersectionObserver, com
   `prefers-reduced-motion` respeitado (inclusive pausando o vídeo em loop)
+
+## Lockfile
+
+Regenere o `package-lock.json` com **npm 11 ou mais novo** (`npx npm@11 install`).
+O npm 10 grava no lock só os binários da plataforma em que rodou — no macOS, o
+`@tailwindcss/oxide-darwin-*` e nada de Linux —, e o `npm ci` do build na Vercel
+recusa o lock por estar fora de sincronia com o `package.json`.
