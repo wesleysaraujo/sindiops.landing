@@ -1,0 +1,625 @@
+---
+import '../styles/global.css';
+
+// SindiOps — landing de acesso antecipado.
+// Página 100% estática (SEO): o HTML sai pronto do build.
+
+const faq = [
+  {
+    p: 'Substitui o sistema que eu já uso?',
+    r: 'Não. Se você já tem plataforma de financeiro, boletos e reservas, continue com ela. SindiOps entra na camada que ela não cobre: consulta e documentos fundamentados na convenção e no regimento do seu condomínio.',
+  },
+  {
+    p: 'Preciso digitalizar os documentos?',
+    r: 'Não. PDF escaneado funciona — o sistema faz o reconhecimento de texto. Documento escaneado vem marcado na tela, para você saber que a transcrição pode ter imprecisão.',
+  },
+  {
+    p: 'E se a convenção mudar em assembleia?',
+    r: 'Você sobe a nova versão e o sistema passa a responder por ela. A versão anterior fica arquivada, e cada documento que você emitiu guarda registro de qual versão o fundamentou.',
+  },
+  {
+    p: 'A resposta serve como fundamento para multa ou notificação?',
+    r: 'Serve como base para você redigir — sempre com o artigo citado, para conferência. Não é parecer jurídico, e casos que envolvem lei federal ou disputa vêm sinalizados para você consultar o advogado do condomínio.',
+  },
+  {
+    p: 'Administro vários condomínios. Como funciona?',
+    r: 'Uma conta só, com cada condomínio isolado — documentos próprios, histórico próprio, e acesso separado para conselheiros e zeladores de cada prédio.',
+  },
+  {
+    p: 'Os moradores acessam?',
+    r: 'Não. É ferramenta do síndico e de quem ele autoriza. O morador continua falando com você.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: 'SindiOps',
+      url: 'https://www.sindiops.com.br',
+      inLanguage: 'pt-BR',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'SindiOps',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      description:
+        'Suba a convenção e o regimento do condomínio e pergunte em português. A resposta vem com o artigo, o parágrafo e a página. Feito para síndicos profissionais.',
+      inLanguage: 'pt-BR',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.p,
+        acceptedAnswer: { '@type': 'Answer', text: item.r },
+      })),
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SindiOps — Respostas da convenção do condomínio, com o artigo citado</title>
+    <meta
+      name="description"
+      content="Suba a convenção e o regimento do condomínio e pergunte em português. A resposta vem com o artigo, o parágrafo e a página. Feito para síndicos profissionais."
+    />
+    <link rel="canonical" href="https://sindiops.com.br/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="SindiOps" />
+    <meta property="og:title" content="SindiOps — Respostas da convenção do condomínio, com o artigo citado" />
+    <meta
+      property="og:description"
+      content="Pergunte em português. A resposta vem com o artigo, o parágrafo e a página — sempre da versão vigente."
+    />
+    <meta property="og:url" content="https://sindiops.com.br/" />
+    <!-- TODO: OG image = print da tela de consulta com a citação aberta (produzir junto com o vídeo) -->
+
+    <!-- Fontes críticas: preload das duas usadas acima da dobra -->
+    <link rel="preload" href="/fonts/besley-v22-latin-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/atkinson-hyperlegible-v12-latin_latin-ext-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+
+  <body class="bg-papel text-tinta font-corpo antialiased">
+    <!-- ============ Marca ============ -->
+    <header class="mx-auto w-full max-w-6xl px-5 pt-6 md:px-8">
+      <p class="font-display text-xl font-extrabold tracking-tight">
+        Sindi<span class="text-caneta">Ops</span><span class="text-caneta">.</span>
+      </p>
+    </header>
+
+    <main>
+      <!-- ============ 1. Herói ============ -->
+      <section class="mx-auto grid w-full max-w-6xl gap-12 px-5 pt-10 pb-16 md:px-8 md:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+        <div class="max-w-xl">
+          <h1 class="font-display text-[2rem] leading-[1.15] font-extrabold text-balance md:text-[2.9rem]">
+            Qualquer dúvida da convenção respondida em segundos — <span class="text-caneta">com o artigo citado</span>.
+          </h1>
+          <p class="mt-5 max-w-prose text-lg">
+            Suba a convenção, o regimento e as atas do condomínio. Pergunte em português como você perguntaria a um
+            advogado. A resposta vem com artigo, parágrafo e página — sempre da versão vigente.
+          </p>
+          <div class="mt-8">
+            <a
+              href="#acesso"
+              class="inline-block rounded-md bg-caneta px-8 py-4 text-lg font-bold text-white shadow-[0_2px_0_0_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            >
+              Quero acesso antecipado
+            </a>
+            <p class="mt-3 text-[0.95rem] text-grafite">
+              Feito para síndicos profissionais. Em desenvolvimento — as primeiras contas entram agora.
+            </p>
+          </div>
+        </div>
+
+        <!-- ===== Assinatura: o fio da fonte ===== -->
+        <figure class="m-0" aria-label="Exemplo de consulta: a resposta aponta, por um fio, o trecho da convenção que a fundamenta">
+          <!-- Pergunta -->
+          <div class="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-tinta px-5 py-3.5 text-[1.05rem] text-papel">
+            “Posso multar por obra no sábado?”
+          </div>
+
+          <!-- Resposta -->
+          <div class="mt-4 max-w-[92%] rounded-2xl rounded-bl-sm border border-fiopapel bg-white px-5 py-4 shadow-sm">
+            <p class="text-[1.05rem]">
+              <strong>Pode.</strong> Obras com ruído são permitidas só de segunda a sexta, das 8h às 17h. Obra no
+              sábado infringe o §1º do Art. 9º da convenção, e a advertência e a multa estão previstas no mesmo
+              parágrafo.
+            </p>
+            <p class="mt-3">
+              <span class="inline-block rounded border-2 border-caneta bg-white px-2.5 py-1 font-protocolo text-[0.9rem] font-bold text-caneta">
+                Art. 9º, §1º&nbsp;·&nbsp;fls. 34
+              </span>
+            </p>
+          </div>
+
+          <!-- O fio -->
+          <div class="ml-14 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
+            <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+            <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+          </div>
+
+          <!-- O documento -->
+          <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 pb-14 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6 md:pb-14">
+            <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+              <span class="uppercase tracking-wide">Convenção do Condomínio</span>
+              <span>fls. 34</span>
+            </div>
+            <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
+              <strong>Art. 9º</strong> — As obras que produzam ruído somente poderão ser executadas de segunda-feira a
+              sexta-feira, entre 8h e 17h.
+              <br />
+              <strong>§1º</strong> — <span class="grifo grifo-animado">A execução de obras aos sábados, domingos e
+              feriados sujeitará o condômino à advertência e, em caso de reincidência, à multa prevista nesta
+              convenção.</span>
+            </p>
+            <span class="carimbo absolute right-4 bottom-4 px-3 py-1.5 text-[0.78rem]">
+              versão vigente<br />reg. 14/03/2026
+            </span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- ============ 2. Prova (demonstração) ============ -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Veja funcionando</h2>
+          <!--
+            Gravação real do produto (Regimento Interno do Condomínio Dom Lucas),
+            do começo ao fim: pergunta → resposta com artigo citado → notificação
+            para a unidade → revisão do rascunho → documento finalizado.
+          -->
+          <video
+            class="mt-6 w-full rounded-sm border border-fiopapel"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="/img/demo-notificacao-poster.webp"
+            aria-label="Demonstração do SindiOps: a pergunta sobre obra com furadeira no sábado recebe resposta citando os artigos 6º e 52 do regimento, e daí sai uma notificação para a unidade 4, revisada e finalizada pelo síndico"
+          >
+            <source src="/img/demo-notificacao.webm" type="video/webm" />
+            <source src="/img/demo-notificacao.mp4" type="video/mp4" />
+            <img src="/img/demo-notificacao-poster.webp" alt="Notificação gerada pelo SindiOps para a unidade 4, com o fato descrito e os artigos 6º e 52 do regimento como fundamento" class="w-full" />
+          </video>
+          <p class="mt-3 text-[0.95rem] text-grafite">Da pergunta à notificação assinada — sem sair da tela, sem abrir o PDF da convenção.</p>
+        </div>
+      </section>
+
+      <!-- ============ 3. As três dores ============ -->
+      <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+        <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">O que muda na sua semana</h2>
+
+        <div class="mt-10 space-y-12">
+          <article>
+            <h3 class="text-xl font-bold">“Posso multar por obra no sábado?”</h3>
+            <p class="mt-2.5 max-w-prose">
+              Você para o que está fazendo, abre o PDF da convenção, rola 40 páginas e reza pra estar na versão certa.
+              Agora você pergunta e recebe o artigo — com a página, pra conferir em dois segundos.
+            </p>
+          </article>
+
+          <article>
+            <h3 class="text-xl font-bold">Notificação fundamentada em 30 segundos</h3>
+            <p class="mt-2.5 max-w-prose">
+              Da resposta sai a notificação pronta: identificação da unidade, o fato, o fundamento com o artigo citado,
+              o prazo e a consequência. Você revisa, ajusta e envia.
+            </p>
+          </article>
+
+          <article>
+            <h3 class="text-xl font-bold">Seus 12 prédios, uma conta só</h3>
+            <p class="mt-2.5 max-w-prose">
+              Cada condomínio com seus próprios documentos e seu próprio histórico. Uma assinatura, um login, sem trocar
+              de sistema a cada prédio.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ 4. Como funciona ============ -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Três passos</h2>
+          <ol class="mt-10 space-y-9">
+            <li class="grid grid-cols-[3rem_1fr] gap-4">
+              <span class="font-protocolo text-[1.7rem] font-bold text-caneta" aria-hidden="true">1.</span>
+              <div>
+                <h3 class="text-xl font-bold">Suba os documentos</h3>
+                <p class="mt-1.5 max-w-prose">
+                  Convenção, regimento interno e atas em PDF. O sistema lê e organiza por artigo — inclusive documento
+                  escaneado.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-[3rem_1fr] gap-4">
+              <span class="font-protocolo text-[1.7rem] font-bold text-caneta" aria-hidden="true">2.</span>
+              <div>
+                <h3 class="text-xl font-bold">Pergunte</h3>
+                <p class="mt-1.5 max-w-prose">
+                  Em português, do jeito que o morador te perguntou. Sem palavra-chave, sem filtro, sem manual.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-[3rem_1fr] gap-4">
+              <span class="font-protocolo text-[1.7rem] font-bold text-caneta" aria-hidden="true">3.</span>
+              <div>
+                <h3 class="text-xl font-bold">Use a resposta</h3>
+                <p class="mt-1.5 max-w-prose">
+                  Confira a citação, gere a circular ou a notificação, exporte em PDF ou copie direto pro WhatsApp.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============ 5. Confiança ============ -->
+      <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+        <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+          Por que você pode usar isso numa notificação
+        </h2>
+        <dl class="mt-10 space-y-8">
+          <div class="border-l-[3px] border-caneta pl-5">
+            <dt class="text-lg font-bold">Sempre com a fonte.</dt>
+            <dd class="mt-1 max-w-prose">
+              Nenhuma resposta sai sem apontar o artigo e a página de onde veio. Você confere antes de usar — e o
+              morador também pode.
+            </dd>
+          </div>
+          <div class="border-l-[3px] border-caneta pl-5">
+            <dt class="text-lg font-bold">Só a versão vigente.</dt>
+            <dd class="mt-1 max-w-prose">
+              Convenção alterada em assembleia vira nova versão. A revogada nunca entra na resposta, e fica registrado
+              qual versão fundamentou cada documento que você emitiu.
+            </dd>
+          </div>
+          <div class="border-l-[3px] border-caneta pl-5">
+            <dt class="text-lg font-bold">Não inventa.</dt>
+            <dd class="mt-1 max-w-prose">
+              Se não houver previsão nos documentos do seu condomínio, a resposta é “não encontrei” — e não um palpite
+              bem escrito.
+            </dd>
+          </div>
+          <div class="border-l-[3px] border-caneta pl-5">
+            <dt class="text-lg font-bold">Apoio à decisão, não parecer jurídico.</dt>
+            <dd class="mt-1 max-w-prose">
+              Para casos que envolvem lei federal ou disputa, a ferramenta te mostra o que está na convenção e sinaliza
+              quando vale falar com o advogado do condomínio.
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ============ 6. Para quem é ============ -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+            Feito para quem administra condomínio de verdade
+          </h2>
+          <ul class="mt-8 space-y-5">
+            <li class="max-w-prose">
+              <strong>Síndico profissional</strong> — vários prédios, cada um com sua convenção, e sua reputação
+              dependendo de responder rápido e certo
+            </li>
+            <li class="max-w-prose">
+              <strong>Síndico morador</strong> — que herdou o mandato e não vai virar especialista em convenção
+            </li>
+            <li class="max-w-prose">
+              <strong>Conselho e zeladoria</strong> — acesso de consulta, sem poder alterar nada
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ 6.1 Posicionamento ============ -->
+      <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+        <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+          Não é mais um sistema de gestão condominial
+        </h2>
+        <p class="mt-6 max-w-prose">
+          Boleto, prestação de contas, reserva do salão, portal do morador — isso o seu sistema atual já faz, e faz bem.
+          SindiOps resolve o que nenhum deles resolve: a pergunta que chega no seu WhatsApp às 21h e cuja resposta está
+          na página 34 da convenção.
+        </p>
+        <p class="mt-4 max-w-prose">
+          Funciona ao lado do que você já usa. Não pede migração, não pede que ninguém abandone nada.
+        </p>
+      </section>
+
+      <!-- ============ 6.2 FAQ ============ -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Perguntas frequentes</h2>
+          <div class="mt-8 divide-y divide-fiopapel border-y border-fiopapel">
+            {
+              faq.map((item) => (
+                <details class="group">
+                  <summary class="flex cursor-pointer list-none items-baseline justify-between gap-4 py-4 text-lg font-bold [&::-webkit-details-marker]:hidden">
+                    {item.p}
+                    <span class="shrink-0 font-protocolo text-xl text-caneta group-open:hidden" aria-hidden="true">+</span>
+                    <span class="hidden shrink-0 font-protocolo text-xl text-caneta group-open:inline" aria-hidden="true">−</span>
+                  </summary>
+                  <p class="max-w-prose pb-5">{item.r}</p>
+                </details>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 7. CTA final (formulário) ============ -->
+      <section id="acesso" class="mx-auto w-full max-w-3xl scroll-mt-8 px-5 py-14 md:px-8 md:py-20">
+        <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Entre na lista de acesso antecipado</h2>
+        <p class="mt-4 max-w-prose">
+          As primeiras contas entram com acompanhamento direto comigo, para ajustar a ferramenta ao seu dia a dia.
+        </p>
+
+        <div aria-live="polite">
+          <form id="form-waitlist" class="mt-9 space-y-6" method="post" action="/waitlist" novalidate>
+            <div>
+              <label for="nome" class="block font-bold">Nome</label>
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                autocomplete="name"
+                required
+                class="mt-1.5 w-full rounded-md border-2 border-grafite/60 bg-white px-4 py-3.5 text-lg"
+                aria-describedby="erro-nome"
+              />
+              <p id="erro-nome" class="mt-1.5 hidden font-bold text-carimbo" role="alert"></p>
+            </div>
+
+            <div>
+              <label for="whatsapp" class="block font-bold">WhatsApp</label>
+              <input
+                type="tel"
+                id="whatsapp"
+                name="whatsapp"
+                inputmode="numeric"
+                autocomplete="tel-national"
+                placeholder="(21) 98765-4321"
+                required
+                class="mt-1.5 w-full rounded-md border-2 border-grafite/60 bg-white px-4 py-3.5 text-lg"
+                aria-describedby="erro-whatsapp"
+              />
+              <p id="erro-whatsapp" class="mt-1.5 hidden font-bold text-carimbo" role="alert"></p>
+            </div>
+
+            <div>
+              <label for="email" class="block font-bold">E-mail</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+                class="mt-1.5 w-full rounded-md border-2 border-grafite/60 bg-white px-4 py-3.5 text-lg"
+                aria-describedby="erro-email"
+              />
+              <p id="erro-email" class="mt-1.5 hidden font-bold text-carimbo" role="alert"></p>
+            </div>
+
+            <fieldset>
+              <legend class="font-bold">Quantos condomínios você administra?</legend>
+              <div class="mt-2.5 grid grid-cols-2 gap-2.5 sm:grid-cols-4" id="grupo-condominios">
+                {
+                  ['1', '2 a 4', '5 a 10', 'mais de 10'].map((opcao) => (
+                    <label class="cursor-pointer rounded-md border-2 border-grafite/60 bg-white px-3 py-3.5 text-center text-lg has-[:checked]:border-caneta has-[:checked]:bg-caneta has-[:checked]:font-bold has-[:checked]:text-white">
+                      <input type="radio" name="condominios" value={opcao} class="sr-only" />
+                      {opcao}
+                    </label>
+                  ))
+                }
+              </div>
+              <p id="erro-condominios" class="mt-1.5 hidden font-bold text-carimbo" role="alert"></p>
+            </fieldset>
+
+            <!-- utm_source da query string; preenchido via JS -->
+            <input type="hidden" name="utm_source" id="utm_source" value="" />
+            <!-- honeypot anti-bot: humano não vê nem preenche -->
+            <div class="hidden" aria-hidden="true">
+              <label for="site">Site</label>
+              <input type="text" id="site" name="site" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                id="botao-enviar"
+                class="w-full rounded-md bg-caneta px-8 py-4 text-lg font-bold text-white shadow-[0_2px_0_0_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 disabled:opacity-60 motion-reduce:transition-none sm:w-auto"
+              >
+                Quero acesso antecipado
+              </button>
+              <p class="mt-3 text-[0.95rem] text-grafite">
+                Sem cartão, sem compromisso. Só te chamo se fizer sentido pra você.
+              </p>
+              <p id="erro-geral" class="mt-3 hidden font-bold text-carimbo" role="alert"></p>
+            </div>
+          </form>
+
+          <div id="sucesso" class="mt-9 hidden rounded-sm border border-fiopapel bg-white p-6" tabindex="-1">
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Recebido ✓</p>
+            <p class="mt-3 max-w-prose text-lg">
+              Te chamo no WhatsApp nos próximos dias — e a primeira coisa que vou perguntar é qual dúvida da convenção
+              mais te consome tempo.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ 8. Rodapé ============ -->
+    <footer class="border-t border-fiopapel">
+      <div class="mx-auto w-full max-w-3xl px-5 py-10 text-[0.95rem] text-grafite md:px-8">
+        <p class="font-bold text-tinta">SindiOps · Rio de Janeiro</p>
+        <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
+        <p class="mt-1">
+          <a href="mailto:contato@sindiops.com.br" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            contato@sindiops.com.br
+          </a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // ---- 1. Varredura do grifo quando o documento entra na tela ----
+      const grifos = document.querySelectorAll('.grifo-animado');
+      if ('IntersectionObserver' in window && grifos.length > 0) {
+        const observador = new IntersectionObserver(
+          (entradas, obs) => {
+            for (const entrada of entradas) {
+              if (entrada.isIntersecting) {
+                entrada.target.classList.add('grifar');
+                obs.unobserve(entrada.target);
+              }
+            }
+          },
+          { threshold: 0.6 }
+        );
+        grifos.forEach((el) => observador.observe(el));
+      } else {
+        grifos.forEach((el) => el.classList.add('grifar'));
+      }
+
+      // ---- 1b. Quem prefere menos movimento não recebe vídeo em loop ----
+      // Ganha os controles no lugar: a demonstração continua disponível, mas
+      // quem decide quando ela roda é a pessoa. Descarregar o vídeo (preload
+      // 'none' + load) devolve o pôster à tela — parar em t=0 deixaria à mostra
+      // o quadro do "Consultando...", que não conta nada de útil parado.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('video[autoplay]').forEach((v) => {
+          const video = v as HTMLVideoElement;
+          video.removeAttribute('autoplay');
+          video.controls = true;
+          video.preload = 'none';
+          video.pause();
+          video.load();
+        });
+      }
+
+      // ---- 2. Máscara de WhatsApp: (21) 98765-4321 ----
+      const campoWhats = document.getElementById('whatsapp') as HTMLInputElement | null;
+      campoWhats?.addEventListener('input', () => {
+        const d = campoWhats.value.replace(/\D/g, '').slice(0, 11);
+        let mascarado = d;
+        if (d.length > 2) mascarado = `(${d.slice(0, 2)}) ${d.slice(2)}`;
+        if (d.length > 7) {
+          const corte = d.length === 11 ? 7 : 6;
+          mascarado = `(${d.slice(0, 2)}) ${d.slice(2, corte)}-${d.slice(corte)}`;
+        }
+        campoWhats.value = mascarado;
+      });
+
+      // ---- 3. utm_source da query string ----
+      const utm = new URLSearchParams(location.search).get('utm_source');
+      const campoUtm = document.getElementById('utm_source') as HTMLInputElement | null;
+      if (utm && campoUtm) campoUtm.value = utm.slice(0, 120);
+
+      // ---- 4. Envio do formulário com validação em português ----
+      const form = document.getElementById('form-waitlist') as HTMLFormElement | null;
+      const botao = document.getElementById('botao-enviar') as HTMLButtonElement | null;
+
+      const mensagens: Record<string, (v: string) => string | null> = {
+        nome: (v) => (v.trim().length >= 2 ? null : 'Digite seu nome — é como vou te chamar no WhatsApp.'),
+        whatsapp: (v) => {
+          const d = v.replace(/\D/g, '');
+          return d.length === 10 || d.length === 11 ? null : 'Digite o WhatsApp com DDD, no formato (21) 98765-4321.';
+        },
+        email: (v) =>
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+            ? null
+            : 'Confira o e-mail — precisa ter o formato nome@exemplo.com.br.',
+        condominios: (v) => (v ? null : 'Escolha uma das quatro opções de quantidade.'),
+      };
+
+      function mostrarErro(campo: string, texto: string | null) {
+        const el = document.getElementById(`erro-${campo}`);
+        if (!el) return;
+        if (texto) {
+          el.textContent = texto;
+          el.classList.remove('hidden');
+        } else {
+          el.textContent = '';
+          el.classList.add('hidden');
+        }
+        const input = document.getElementById(campo);
+        input?.setAttribute('aria-invalid', texto ? 'true' : 'false');
+      }
+
+      form?.addEventListener('submit', async (evento) => {
+        evento.preventDefault();
+        const dados = new FormData(form);
+        const valores = Object.fromEntries(dados.entries()) as Record<string, string>;
+
+        let primeiroErro: string | null = null;
+        for (const campo of ['nome', 'whatsapp', 'email', 'condominios']) {
+          const erro = mensagens[campo](valores[campo] || '');
+          mostrarErro(campo, erro);
+          if (erro && !primeiroErro) primeiroErro = campo;
+        }
+        if (primeiroErro) {
+          const alvo = document.getElementById(primeiroErro) || document.getElementById('grupo-condominios');
+          alvo?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          (document.getElementById(primeiroErro) as HTMLElement | null)?.focus?.();
+          return;
+        }
+
+        botao?.setAttribute('disabled', 'true');
+        const erroGeral = document.getElementById('erro-geral');
+        erroGeral?.classList.add('hidden');
+
+        try {
+          const resposta = await fetch('/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(valores),
+          });
+
+          if (resposta.ok) {
+            form.classList.add('hidden');
+            const sucesso = document.getElementById('sucesso');
+            sucesso?.classList.remove('hidden');
+            (sucesso as HTMLElement | null)?.focus();
+          } else if (resposta.status === 422) {
+            const corpo = await resposta.json();
+            for (const [campo, texto] of Object.entries(corpo.erros || {})) {
+              mostrarErro(campo, texto as string);
+            }
+          } else {
+            throw new Error('erro-servidor');
+          }
+        } catch {
+          if (erroGeral) {
+            erroGeral.textContent =
+              'Não consegui enviar agora. Espere um instante e toque de novo no botão — seus dados continuam preenchidos.';
+            erroGeral.classList.remove('hidden');
+          }
+        } finally {
+          botao?.removeAttribute('disabled');
+        }
+      });
+    </script>
+  </body>
+</html>
