@@ -35,7 +35,13 @@ Cada envio do formulário é enviado para API do sindiops, que grava no banco de
 
 ## Lockfile
 
-Regenere o `package-lock.json` com **npm 11 ou mais novo** (`npx npm@11 install`).
-O npm 10 grava no lock só os binários da plataforma em que rodou — no macOS, o
-`@tailwindcss/oxide-darwin-*` e nada de Linux —, e o `npm ci` do build na Vercel
-recusa o lock por estar fora de sincronia com o `package.json`.
+A versão do npm está fixada em `packageManager` (`npm@11.19.0`): a Vercel a
+respeita e, com o Corepack ligado (`corepack enable`), o seu terminal também.
+
+O motivo é o lock: o npm 10 grava nele só os binários da plataforma em que
+rodou — no macOS, o `@tailwindcss/oxide-darwin-*` e nada de Linux —, e o
+`npm ci` do build recusa o lock por estar fora de sincronia com o
+`package.json`. Sem o Corepack, regenere com `npx npm@11 install`.
+
+O npm 11 pede Node `^20.17` ou `>=22.9`; em versão anterior ele avisa e roda,
+mas vale atualizar o Node local.
