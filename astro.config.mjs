@@ -11,7 +11,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://sindiops.com.br',
   output: 'static',
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: { enabled: true },
+  }),
   vite: {
     plugins: [tailwindcss()],
   },
