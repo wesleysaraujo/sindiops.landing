@@ -125,10 +125,19 @@ export const POST: APIRoute = async ({ request }) => {
 
   // O arquivo deixou de ser o destino e virou rede de segurança: só guarda o
   // que o app não recebeu. `php artisan leads:import` recupera essas linhas.
+  //
+  // Em serverless o disco é somente leitura (e efêmero), então a gravação
+  // falha e o registro vai para o log da plataforma. Sem o try/catch, o EROFS
+  // subiria como 500 e a pessoa veria erro depois de já ter preenchido tudo —
+  // perderíamos o lead E a confiança dela.
   if (!entregue) {
-    const dir = path.resolve('./data');
-    await mkdir(dir, { recursive: true });
-    await appendFile(path.join(dir, 'waitlist.jsonl'), JSON.stringify(registro) + '\n', 'utf8');
+    try {
+      const dir = path.resolve('./data');
+      await mkdir(dir, { recursive: true });
+      await appendFile(path.join(dir, 'waitlist.jsonl'), JSON.stringify(registro) + '\n', 'utf8');
+    } catch {
+      console.error('[waitlist] app indisponível e disco somente leitura:', JSON.stringify(registro));
+    }
   }
 
   return new Response(JSON.stringify({ ok: true }), {
