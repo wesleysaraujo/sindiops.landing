@@ -140,9 +140,31 @@ const jsonLd = {
 
     <!-- ============ Marca ============ -->
     <header class="mx-auto w-full max-w-6xl px-5 pt-6 md:px-8">
-      <p class="font-display text-xl font-extrabold tracking-tight">
-        Sindi<span class="text-caneta">Ops</span><span class="text-caneta">.</span>
-      </p>
+      <div class="flex items-center gap-2.5">
+        <!--
+          A mesma marca do app (`AppLogoIcon.vue`): a folha do documento com a
+          lupa sobre o § da norma. Inline, e não `<img>`, para acompanhar
+          `--azul-caneta` — que aqui e lá tem o mesmo nome e o mesmo valor.
+
+          O `viewBox` recorta a margem morta do desenho original (100×100 com o
+          traço ocupando de 24 a 87), senão a marca renderizaria pequena dentro
+          de uma caixa quase vazia.
+        -->
+        <svg viewBox="18 14 76 76" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-9 shrink-0" aria-hidden="true">
+          <path d="M24 20C24 17.7909 25.7909 16 28 16H58L74 32V78C74 80.2091 72.2091 82 70 82H28C25.7909 82 24 80.2091 24 78V20Z" fill="var(--azul-caneta)" />
+          <path d="M58 16V32H74" fill="#ffffff" opacity="0.35" />
+          <rect x="32" y="27" width="16" height="4" rx="1" fill="#ffffff" />
+          <rect x="32" y="35" width="22" height="4" rx="1" fill="#ffffff" />
+          <rect x="32" y="43" width="12" height="4" rx="1" fill="#ffffff" />
+          <circle cx="58" cy="58" r="18" fill="#ffffff" stroke="var(--azul-caneta)" stroke-width="6" />
+          <text x="58" y="58" font-size="20" font-weight="bold" font-family="Georgia, 'Times New Roman', serif" fill="var(--azul-caneta)" text-anchor="middle" dominant-baseline="central">§</text>
+          <path d="M71 71L84 84" stroke="var(--azul-caneta)" stroke-width="7" stroke-linecap="round" />
+        </svg>
+
+        <p class="font-display text-2xl font-extrabold tracking-tight">
+          Sindi<span class="text-caneta">Ops</span><span class="text-caneta">.</span>
+        </p>
+      </div>
     </header>
 
     <main>
