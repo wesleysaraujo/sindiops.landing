@@ -22,12 +22,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 const faq = [
   {
+    p: 'Por que não faço isso no ChatGPT?',
+    r: 'Você faz — e recebe um texto bem escrito que ninguém consegue conferir. Aqui a diferença não é o modelo, é onde ele não decide: resposta sem trecho encontrado na sua convenção vira “não encontrei”, valor de proposta cuja linha não existe no arquivo é descartado, a nota de cada orçamento é uma conta que você refaz no papel, e nada pontua sem você confirmar. Num chat genérico, quando o conselho perguntar de onde saiu o número, a resposta é “a inteligência artificial disse”.',
+  },
+  {
     p: 'Substitui o sistema que eu já uso?',
-    r: 'Não. Se você já tem plataforma de financeiro, boletos e reservas, continue com ela. SindiOps entra na camada que ela não cobre: consulta e documentos fundamentados na convenção e no regimento do seu condomínio.',
+    r: 'Não. Se você já tem plataforma de financeiro, boletos e reservas, continue com ela. SindiOps entra na camada que ela não cobre: as decisões que você precisa justificar depois — o que a convenção permite, e qual fornecedor contratar.',
+  },
+  {
+    p: 'Como funciona a parte de orçamentos?',
+    r: 'Você define o que quer contratar e quanto pesa cada critério — preço, prazo, garantia, o que for. O sistema gera o edital e envia aos fornecedores. Quando as propostas chegam, ele lê cada uma e mostra o valor ao lado da linha da proposta que o comprova; você confere item por item. Só então sai a nota, o parecer e a recomendação. Contratar continua sendo ato seu, registrado com a sua justificativa.',
+  },
+  {
+    p: 'A nota do orçamento é o computador escolhendo por mim?',
+    r: 'Não. A nota é uma fórmula sobre os valores que você confirmou, com os pesos que você definiu — dá para refazer a lápis. O sistema escreve o parecer e aponta o trade-off de cada escolha; a decisão é sua, e o que fica registrado é a sua justificativa, não a sugestão dele.',
   },
   {
     p: 'Preciso digitalizar os documentos?',
-    r: 'Não. PDF escaneado funciona — o sistema faz o reconhecimento de texto. Documento escaneado vem marcado na tela, para você saber que a transcrição pode ter imprecisão.',
+    r: 'Não. PDF escaneado funciona — o sistema faz o reconhecimento de texto. Isso vale para a convenção e para a proposta que o fornecedor mandou fotografada. Documento escaneado vem marcado na tela, para você saber que a transcrição pode ter imprecisão.',
   },
   {
     p: 'E se a convenção mudar em assembleia?',
@@ -39,13 +51,20 @@ const faq = [
   },
   {
     p: 'Administro vários condomínios. Como funciona?',
-    r: 'Uma conta só, com cada condomínio isolado — documentos próprios, histórico próprio, e acesso separado para conselheiros e zeladores de cada prédio.',
+    r: 'Uma conta só, com cada condomínio isolado — documentos próprios, fornecedores do escritório, histórico próprio, e acesso separado para conselheiros e zeladores de cada prédio.',
   },
   {
-    p: 'Os moradores acessam?',
-    r: 'Não. É ferramenta do síndico e de quem ele autoriza. O morador continua falando com você.',
+    p: 'Os moradores e os fornecedores acessam?',
+    r: 'Não. É ferramenta do síndico e de quem ele autoriza. O fornecedor recebe o edital por e-mail e responde com a proposta como sempre fez; o morador continua falando com você.',
   },
 ];
+
+// A frase que define o produto. Fica numa constante porque a `description` e o
+// JSON-LD precisam dizer a mesma coisa, e mantê-los sincronizados à mão é como
+// a página acabou descrevendo só a convenção depois que o produto cresceu.
+// O `<title>` não usa esta: lá o limite é de ~60 caracteres.
+const descricao =
+  'Pergunte sobre a convenção e receba o artigo citado. Compare orçamentos e receba a linha da proposta que prova cada número. Toda decisão sai com a fonte junto, pronta para o conselho e a assembleia.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -61,9 +80,15 @@ const jsonLd = {
       name: 'SindiOps',
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
-      description:
-        'Suba a convenção e o regimento do condomínio e pergunte em português. A resposta vem com o artigo, o parágrafo e a página. Feito para síndicos profissionais.',
+      description: descricao,
       inLanguage: 'pt-BR',
+      featureList: [
+        'Consulta à convenção e ao regimento com citação do artigo e da página',
+        'Geração de circular, notificação e advertência fundamentadas',
+        'Processo de orçamento com critérios ponderados e edital em PDF',
+        'Leitura das propostas com o trecho que comprova cada valor',
+        'Comparativo, parecer e registro da decisão de contratação',
+      ],
     },
     {
       '@type': 'FAQPage',
@@ -89,11 +114,8 @@ const jsonLd = {
     -->
     {gtmAtivo && <script is:inline set:html={gtmSnippet} />}
 
-    <title>SindiOps — Respostas da convenção do condomínio, com o artigo citado</title>
-    <meta
-      name="description"
-      content="Suba a convenção e o regimento do condomínio e pergunte em português. A resposta vem com o artigo, o parágrafo e a página. Feito para síndicos profissionais."
-    />
+    <title>SindiOps — As decisões do síndico, com a fonte junto</title>
+    <meta name="description" content={descricao} />
     <link rel="canonical" href="https://sindiops.com.br/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
@@ -101,10 +123,10 @@ const jsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="SindiOps" />
-    <meta property="og:title" content="SindiOps — Respostas da convenção do condomínio, com o artigo citado" />
+    <meta property="og:title" content="SindiOps — As decisões do síndico, com a fonte junto" />
     <meta
       property="og:description"
-      content="Pergunte em português. A resposta vem com o artigo, o parágrafo e a página — sempre da versão vigente."
+      content="Da dúvida na convenção à escolha do fornecedor: a resposta vem com o artigo citado, e o orçamento com a linha da proposta que prova cada número."
     />
     <meta property="og:url" content="https://sindiops.com.br/" />
     <!-- TODO: OG image = print da tela de consulta com a citação aberta (produzir junto com o vídeo) -->
@@ -172,11 +194,12 @@ const jsonLd = {
       <section class="mx-auto grid w-full max-w-6xl gap-12 px-5 pt-10 pb-16 md:px-8 md:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
         <div class="max-w-xl">
           <h1 class="font-display text-[2rem] leading-[1.15] font-extrabold text-balance md:text-[2.9rem]">
-            Qualquer dúvida da convenção respondida em segundos — <span class="text-caneta">com o artigo citado</span>.
+            No condomínio, toda decisão pode ser contestada. <span class="text-caneta">As suas vêm com a fonte.</span>
           </h1>
           <p class="mt-5 max-w-prose text-lg">
-            Suba a convenção, o regimento e as atas do condomínio. Pergunte em português como você perguntaria a um
-            advogado. A resposta vem com artigo, parágrafo e página — sempre da versão vigente.
+            Pergunte sobre a convenção e receba o artigo, o parágrafo e a página. Compare orçamentos e receba a linha da
+            proposta que prova cada número. Você confere antes de usar — e leva a fundamentação junto para o conselho e
+            a assembleia.
           </p>
           <div class="mt-8">
             <a
@@ -266,8 +289,112 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ============ 3. As três dores ============ -->
-      <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+      <!-- ============ 3. A segunda decisão: orçamento ============ -->
+      <!--
+        A capacidade que o produto ganhou depois da consulta, e que precisa de
+        prova visual do mesmo peso que a do herói: lá o fio liga a resposta ao
+        artigo, aqui liga o número da grade à linha da proposta que o comprova.
+        Sem esta seção a página continuaria dizendo que o produto é sobre a
+        convenção.
+      -->
+      <section class="mx-auto w-full max-w-6xl px-5 py-14 md:px-8 md:py-20">
+        <div class="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
+          <div class="max-w-xl">
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">A decisão que custa caro</p>
+            <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+              Três orçamentos, três formatos, e o conselho perguntando por quê
+            </h2>
+            <p class="mt-5 max-w-prose">
+              Um manda planilha, o outro manda PDF, o terceiro manda foto de papel timbrado. Um cobra a mão de obra à
+              parte, o outro embutiu. Você monta a comparação no caderno e, dois meses depois, precisa explicar em
+              assembleia por que escolheu aquele.
+            </p>
+            <p class="mt-4 max-w-prose">
+              Aqui você declara os critérios <strong>antes</strong> de ver as propostas e diz quanto cada um pesa. O
+              sistema gera o edital, envia aos fornecedores e lê o que voltar — mostrando cada valor ao lado da linha
+              que o comprova. Você confere item por item; só o que você confirmar entra na conta.
+            </p>
+            <p class="mt-4 max-w-prose">
+              No fim sai a nota de cada proposta, o parecer com o que se ganha e o que se perde em cada escolha, e a
+              recomendação. <strong>Contratar continua sendo ato seu</strong> — e fica registrado com a sua
+              justificativa, junto de tudo que a sustentou.
+            </p>
+          </div>
+
+          <!-- ===== Assinatura: o fio da fonte, agora na proposta ===== -->
+          <!--
+            `min-w-0`: item de grid tem largura mínima de conteúdo por padrão, e
+            a tabela aqui dentro rola. Sem isso o mínimo dela empurraria a
+            coluna e a seção inteira transbordaria em tela estreita — o mesmo
+            defeito que apareceu no painel do app em 390px.
+          -->
+          <figure class="m-0 min-w-0" aria-label="Exemplo de conferência: o valor da grade aponta, por um fio, a linha da proposta que o comprova">
+            <div class="rounded-sm border border-fiopapel bg-white p-5 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6">
+              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+                <span class="uppercase tracking-wide">Impermeabilização da laje</span>
+                <span>3 propostas</span>
+              </div>
+
+              <div class="mt-4 overflow-x-auto">
+                <table class="w-full border-collapse text-left text-[0.95rem]">
+                  <thead>
+                    <tr class="font-protocolo text-[0.8rem] text-grafite">
+                      <th class="pb-2 font-normal">Fornecedor</th>
+                      <th class="pb-2 text-right font-normal">Preço&nbsp;·&nbsp;50%</th>
+                      <th class="pb-2 text-right font-normal">Garantia&nbsp;·&nbsp;30%</th>
+                      <th class="pb-2 text-right font-normal">Nota</th>
+                    </tr>
+                  </thead>
+                  <tbody class="font-protocolo">
+                    <tr class="border-t border-fiopapel">
+                      <td class="py-2.5">Impermeasul</td>
+                      <td class="py-2.5 text-right">R$&nbsp;44.000</td>
+                      <td class="py-2.5 text-right"><span class="grifo">60&nbsp;meses</span></td>
+                      <td class="py-2.5 text-right font-bold text-caneta">8,4</td>
+                    </tr>
+                    <tr class="border-t border-fiopapel">
+                      <td class="py-2.5">Coberturas RJ</td>
+                      <td class="py-2.5 text-right">R$&nbsp;39.500</td>
+                      <td class="py-2.5 text-right">24&nbsp;meses</td>
+                      <td class="py-2.5 text-right font-bold">7,1</td>
+                    </tr>
+                    <tr class="border-t border-fiopapel">
+                      <td class="py-2.5">Laje Nova</td>
+                      <td class="py-2.5 text-right">R$&nbsp;51.200</td>
+                      <td class="py-2.5 text-right">36&nbsp;meses</td>
+                      <td class="py-2.5 text-right font-bold">6,3</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- O fio: mesmo gesto do herói, ligando o número à sua prova -->
+            <div class="ml-16 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
+              <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+              <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+            </div>
+
+            <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6">
+              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+                <span class="uppercase tracking-wide">Proposta — Impermeasul</span>
+                <span>fls. 2</span>
+              </div>
+              <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
+                <span class="grifo grifo-animado">Garantia de 5 (cinco) anos contra infiltração, contados da entrega
+                da obra, cobrindo material e mão de obra.</span>
+              </p>
+              <p class="mt-4 text-[0.9rem] text-grafite">
+                O valor só entra na nota depois que você confirma que ele está mesmo ali.
+              </p>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ 4. As dores ============ -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">O que muda na sua semana</h2>
 
         <div class="mt-10 space-y-12">
@@ -288,63 +415,119 @@ const jsonLd = {
           </article>
 
           <article>
+            <h3 class="text-xl font-bold">A obra de R$ 44 mil que você vai ter que justificar</h3>
+            <p class="mt-2.5 max-w-prose">
+              Do edital que padroniza o que cada fornecedor cota até o registro de por que você escolheu aquele. Quando
+              a pergunta vier — e ela vem —, a resposta já está pronta e por escrito.
+            </p>
+          </article>
+
+          <article>
             <h3 class="text-xl font-bold">Seus 12 prédios, uma conta só</h3>
             <p class="mt-2.5 max-w-prose">
-              Cada condomínio com seus próprios documentos e seu próprio histórico. Uma assinatura, um login, sem trocar
-              de sistema a cada prédio.
+              Cada condomínio com seus próprios documentos e seu próprio histórico. Seus fornecedores cadastrados uma
+              vez, disponíveis em todos. Uma assinatura, um login, sem trocar de sistema a cada prédio.
             </p>
           </article>
         </div>
-      </section>
-
-      <!-- ============ 4. Como funciona ============ -->
-      <section class="border-y border-fiopapel bg-white">
-        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
-          <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Três passos</h2>
-          <ol class="mt-10 space-y-9">
-            <li class="grid grid-cols-[3rem_1fr] gap-4">
-              <span class="font-protocolo text-[1.7rem] font-bold text-caneta" aria-hidden="true">1.</span>
-              <div>
-                <h3 class="text-xl font-bold">Suba os documentos</h3>
-                <p class="mt-1.5 max-w-prose">
-                  Convenção, regimento interno e atas em PDF. O sistema lê e organiza por artigo — inclusive documento
-                  escaneado.
-                </p>
-              </div>
-            </li>
-            <li class="grid grid-cols-[3rem_1fr] gap-4">
-              <span class="font-protocolo text-[1.7rem] font-bold text-caneta" aria-hidden="true">2.</span>
-              <div>
-                <h3 class="text-xl font-bold">Pergunte</h3>
-                <p class="mt-1.5 max-w-prose">
-                  Em português, do jeito que o morador te perguntou. Sem palavra-chave, sem filtro, sem manual.
-                </p>
-              </div>
-            </li>
-            <li class="grid grid-cols-[3rem_1fr] gap-4">
-              <span class="font-protocolo text-[1.7rem] font-bold text-caneta" aria-hidden="true">3.</span>
-              <div>
-                <h3 class="text-xl font-bold">Use a resposta</h3>
-                <p class="mt-1.5 max-w-prose">
-                  Confira a citação, gere a circular ou a notificação, exporte em PDF ou copie direto pro WhatsApp.
-                </p>
-              </div>
-            </li>
-          </ol>
         </div>
       </section>
 
-      <!-- ============ 5. Confiança ============ -->
-      <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+      <!-- ============ 5. Como funciona ============ -->
+      <!--
+        Dois caminhos lado a lado, e não um fluxo só: o síndico entra pelo que o
+        aperta hoje — a dúvida da convenção ou a obra que precisa contratar — e
+        precisa reconhecer o seu caso em três passos, sem ler o outro.
+      -->
+      <section class="mx-auto w-full max-w-5xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
-          Por que você pode usar isso numa notificação
+          Três passos, dos dois lados
+        </h2>
+
+        <div class="mt-10 grid gap-12 md:grid-cols-2 md:gap-10">
+          <div>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Documento</p>
+            <ol class="mt-5 space-y-7">
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">1.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Suba os documentos</h3>
+                  <p class="mt-1.5">
+                    Convenção, regimento e atas em PDF. O sistema lê e organiza por artigo — inclusive escaneado.
+                  </p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">2.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Pergunte</h3>
+                  <p class="mt-1.5">
+                    Em português, do jeito que o morador te perguntou. Sem palavra-chave, sem filtro, sem manual.
+                  </p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">3.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Use a resposta</h3>
+                  <p class="mt-1.5">
+                    Confira a citação, gere a circular ou a notificação, envie por e-mail, exporte em PDF ou copie pro
+                    WhatsApp.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Orçamento</p>
+            <ol class="mt-5 space-y-7">
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">1.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Diga o que pesa</h3>
+                  <p class="mt-1.5">
+                    Escopo, prazos e os critérios com peso — antes de ver qualquer proposta. Sai o edital em PDF, por
+                    e-mail aos fornecedores.
+                  </p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">2.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Confira o que chegou</h3>
+                  <p class="mt-1.5">
+                    Suba as propostas. Cada valor aparece ao lado da linha que o comprova, e você confirma item por
+                    item.
+                  </p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">3.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Decida e registre</h3>
+                  <p class="mt-1.5">
+                    Nota, parecer e trade-off de cada escolha. Você contrata e escreve por quê — e isso fica.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 6. Confiança ============ -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+        <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+          Por que você pode levar isso a uma assembleia
         </h2>
         <dl class="mt-10 space-y-8">
           <div class="border-l-[3px] border-caneta pl-5">
             <dt class="text-lg font-bold">Sempre com a fonte.</dt>
             <dd class="mt-1 max-w-prose">
-              Nenhuma resposta sai sem apontar o artigo e a página de onde veio. Você confere antes de usar — e o
-              morador também pode.
+              Nenhuma resposta sai sem apontar o artigo e a página de onde veio. Nenhum valor de proposta entra na
+              comparação sem a linha que o comprova. Você confere antes de usar — e quem contestar também pode.
             </dd>
           </div>
           <div class="border-l-[3px] border-caneta pl-5">
@@ -358,20 +541,93 @@ const jsonLd = {
             <dt class="text-lg font-bold">Não inventa.</dt>
             <dd class="mt-1 max-w-prose">
               Se não houver previsão nos documentos do seu condomínio, a resposta é “não encontrei” — e não um palpite
-              bem escrito.
+              bem escrito. Se um valor não estiver escrito na proposta, a célula fica vazia em vez de receber um número
+              plausível.
+            </dd>
+          </div>
+          <div class="border-l-[3px] border-caneta pl-5">
+            <dt class="text-lg font-bold">A conta é sua, e dá pra refazer.</dt>
+            <dd class="mt-1 max-w-prose">
+              A nota de cada orçamento é uma fórmula com os pesos que você definiu, sobre os valores que você
+              confirmou. Cabe numa folha de papel — e é assim que você a defende.
             </dd>
           </div>
           <div class="border-l-[3px] border-caneta pl-5">
             <dt class="text-lg font-bold">Apoio à decisão, não parecer jurídico.</dt>
             <dd class="mt-1 max-w-prose">
               Para casos que envolvem lei federal ou disputa, a ferramenta te mostra o que está na convenção e sinaliza
-              quando vale falar com o advogado do condomínio.
+              quando vale falar com o advogado do condomínio. E nenhuma recomendação contrata sozinha: contratar é ato
+              seu, registrado com a sua justificativa.
             </dd>
           </div>
         </dl>
+        </div>
       </section>
 
-      <!-- ============ 6. Para quem é ============ -->
+      <!-- ============ 7. A IA, e onde ela não decide ============ -->
+      <!--
+        A objeção que todo síndico com celular na mão vai fazer — "eu já faço
+        isso no ChatGPT". Responder com "nosso modelo é melhor" perderia, porque
+        é o mesmo modelo. O que separa é o que está desligado aqui de propósito,
+        e é isso que a tabela mostra.
+      -->
+      <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+        <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+          Sim, tem inteligência artificial. O que importa é onde ela <span class="text-caneta">não</span> decide.
+        </h2>
+        <p class="mt-5 max-w-prose">
+          Você consegue colar a convenção num chat qualquer e perguntar. Consegue jogar três propostas lá e pedir uma
+          comparação. Vem um texto bem escrito, em segundos, e ele até acerta na maior parte das vezes.
+        </p>
+        <p class="mt-4 max-w-prose">
+          O problema aparece depois, quando alguém pergunta de onde saiu aquilo. Aqui a IA lê e escreve — mas quem
+          fecha a conta é a matemática, e quem decide é você:
+        </p>
+
+        <div class="mt-9 overflow-x-auto">
+          <table class="w-full border-collapse text-left">
+            <thead>
+              <tr class="font-protocolo text-[0.8rem] tracking-wide text-grafite uppercase">
+                <th class="border-b-2 border-tinta pb-2.5 pr-4 font-normal">Num chat genérico</th>
+                <th class="border-b-2 border-caneta pb-2.5 pl-4 font-normal text-caneta">No SindiOps</th>
+              </tr>
+            </thead>
+            <tbody class="align-top">
+              <tr class="border-b border-fiopapel">
+                <td class="py-4 pr-4">Não sabe qual versão da sua convenção vale hoje</td>
+                <td class="py-4 pl-4 font-bold">Só a versão vigente responde; a revogada fica arquivada</td>
+              </tr>
+              <tr class="border-b border-fiopapel">
+                <td class="py-4 pr-4">Quando não encontra, escreve algo plausível</td>
+                <td class="py-4 pl-4 font-bold">Quando não encontra, diz “não encontrei”</td>
+              </tr>
+              <tr class="border-b border-fiopapel">
+                <td class="py-4 pr-4">Cita um artigo que pode não existir no seu documento</td>
+                <td class="py-4 pl-4 font-bold">A citação é conferida contra o texto; a que não bate é descartada</td>
+              </tr>
+              <tr class="border-b border-fiopapel">
+                <td class="py-4 pr-4">Dá uma nota ao orçamento sem mostrar a conta</td>
+                <td class="py-4 pl-4 font-bold">A nota é fórmula com os seus pesos, refeita a lápis em cinco minutos</td>
+              </tr>
+              <tr class="border-b border-fiopapel">
+                <td class="py-4 pr-4">Lê um valor errado na proposta e ninguém percebe</td>
+                <td class="py-4 pl-4 font-bold">Nada entra na conta sem você confirmar, com a linha da proposta ao lado</td>
+              </tr>
+              <tr class="border-b border-fiopapel">
+                <td class="py-4 pr-4">A conversa some no histórico</td>
+                <td class="py-4 pl-4 font-bold">Fica o registro: o que se perguntou, o que fundamentou, quem decidiu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="mt-8 max-w-prose text-lg">
+          Um chat te ajuda a <strong>entender</strong> um assunto. Isso aqui te ajuda a <strong>sustentar</strong> uma
+          decisão — e são coisas diferentes na hora em que alguém contesta.
+        </p>
+      </section>
+
+      <!-- ============ 8. Para quem é ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
@@ -379,35 +635,45 @@ const jsonLd = {
           </h2>
           <ul class="mt-8 space-y-5">
             <li class="max-w-prose">
-              <strong>Síndico profissional</strong> — vários prédios, cada um com sua convenção, e sua reputação
-              dependendo de responder rápido e certo
+              <strong>Síndico profissional</strong> — vários prédios, cada um com sua convenção e suas obras, e sua
+              reputação dependendo de responder rápido e escolher certo
             </li>
             <li class="max-w-prose">
-              <strong>Síndico morador</strong> — que herdou o mandato e não vai virar especialista em convenção
+              <strong>Síndico morador</strong> — que herdou o mandato e não vai virar especialista em convenção nem em
+              contratação de obra
             </li>
             <li class="max-w-prose">
               <strong>Conselho e zeladoria</strong> — acesso de consulta, sem poder alterar nada
             </li>
           </ul>
+          <p class="mt-8 max-w-prose">
+            A interface tem seletor de tamanho de texto, e já abre num tamanho maior que o padrão da web — porque boa
+            parte de quem usa isso tem 55 anos ou mais, e o padrão de um produto deve servir a quem ele é feito.
+          </p>
         </div>
       </section>
 
-      <!-- ============ 6.1 Posicionamento ============ -->
+      <!-- ============ 9. Posicionamento ============ -->
       <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
           Não é mais um sistema de gestão condominial
         </h2>
         <p class="mt-6 max-w-prose">
           Boleto, prestação de contas, reserva do salão, portal do morador — isso o seu sistema atual já faz, e faz bem.
-          SindiOps resolve o que nenhum deles resolve: a pergunta que chega no seu WhatsApp às 21h e cuja resposta está
-          na página 34 da convenção.
+          SindiOps resolve o que nenhum deles resolve: <strong>as decisões que você vai ter que justificar depois</strong>.
+          A pergunta que chega no seu WhatsApp às 21h e cuja resposta está na página 34 da convenção. A obra de R$ 44
+          mil que vai voltar na pauta da assembleia.
+        </p>
+        <p class="mt-4 max-w-prose">
+          E também não é módulo financeiro: cobrar, ratear e prestar contas continua sendo do sistema da administradora.
+          O que é seu é <em>escolher em que o condomínio gasta</em> — e é aí que a gente entra.
         </p>
         <p class="mt-4 max-w-prose">
           Funciona ao lado do que você já usa. Não pede migração, não pede que ninguém abandone nada.
         </p>
       </section>
 
-      <!-- ============ 6.2 FAQ ============ -->
+      <!-- ============ 10. FAQ ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Perguntas frequentes</h2>
@@ -428,7 +694,7 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ============ 7. CTA final (formulário) ============ -->
+      <!-- ============ 11. CTA final (formulário) ============ -->
       <section id="acesso" class="mx-auto w-full max-w-3xl scroll-mt-8 px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Entre na lista de acesso antecipado</h2>
         <p class="mt-4 max-w-prose">
@@ -522,15 +788,15 @@ const jsonLd = {
           <div id="sucesso" class="mt-9 hidden rounded-sm border border-fiopapel bg-white p-6" tabindex="-1">
             <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Recebido ✓</p>
             <p class="mt-3 max-w-prose text-lg">
-              Te chamo no WhatsApp nos próximos dias — e a primeira coisa que vou perguntar é qual dúvida da convenção
-              mais te consome tempo.
+              Te chamo no WhatsApp nos próximos dias — e a primeira coisa que vou perguntar é qual decisão do seu mês
+              mais te deu trabalho para justificar.
             </p>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- ============ 8. Rodapé ============ -->
+    <!-- ============ 12. Rodapé ============ -->
     <footer class="border-t border-fiopapel">
       <div class="mx-auto w-full max-w-3xl px-5 py-10 text-[0.95rem] text-grafite md:px-8">
         <p class="font-bold text-tinta">SindiOps · Rio de Janeiro</p>
