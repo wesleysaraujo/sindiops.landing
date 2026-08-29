@@ -798,14 +798,42 @@ const jsonLd = {
 
     <!-- ============ 12. Rodapé ============ -->
     <footer class="border-t border-fiopapel">
-      <div class="mx-auto w-full max-w-3xl px-5 py-10 text-[0.95rem] text-grafite md:px-8">
-        <p class="font-bold text-tinta">SindiOps · Rio de Janeiro</p>
-        <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
-        <p class="mt-1">
-          <a href="mailto:contato@sindiops.com.br" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
-            contato@sindiops.com.br
-          </a>
-        </p>
+      <div
+        class="mx-auto flex w-full max-w-3xl flex-col gap-8 px-5 py-10 text-[0.95rem] text-grafite md:flex-row md:items-end md:justify-between md:px-8"
+      >
+        <div>
+          <p class="font-bold text-tinta">SindiOps</p>
+          <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
+          <p class="mt-1">
+            <a href="mailto:contato@sindiops.com.br" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+              contato@sindiops.com.br
+            </a>
+          </p>
+        </div>
+
+        <!--
+          Selo do Microsoft for Startups. Fica no rodapé e não perto do
+          formulário de propósito: é sinal de que o produto é levado a sério por
+          quem entende de software, não um argumento para o síndico — ele não
+          decide por causa disso, e usar como chamariz roubaria a atenção da
+          única coisa que a página pede.
+
+          O PNG foi recortado da margem morta e teve o fundo branco removido —
+          o original era 1563×978 com o texto ocupando 9% da área, e o retângulo
+          branco apareceria por cima do papel creme.
+        -->
+        <div class="shrink-0 md:text-right">
+          <p class="font-protocolo text-[0.78rem] tracking-wide text-grafite uppercase">Apoiado por</p>
+          <img
+            src="/img/microsoft-sturtups.png"
+            alt="Microsoft for Startups"
+            width="533"
+            height="263"
+            loading="lazy"
+            decoding="async"
+            class="mt-2 h-auto w-[9.5rem]"
+          />
+        </div>
       </div>
     </footer>
 
