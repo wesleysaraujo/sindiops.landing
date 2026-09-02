@@ -41,6 +41,13 @@ docker compose --project-directory "$APP" exec -T app php artisan tinker --execu
 echo "→ vídeo 1 (consulta)";   node video1.mjs
 echo "→ vídeo 2 (orçamento)";  node video2.mjs
 
+# Prints em 2x das telas que sustentam o argumento, para peça de marketing.
+# Ficam fora do controle de versão (a pasta `design/` não é repositório): são
+# artefatos regeneráveis, e versioná-los só encheria o histórico de PNG.
+echo "→ prints"; PRINTS_DESTINO="${PRINTS_DESTINO:-../../../design/prints-produto}" node prints.mjs
+mkdir -p "${PRINTS_DESTINO:-../../../design/prints-produto}"
+cp prints/*.png "${PRINTS_DESTINO:-../../../design/prints-produto}/"
+
 mkdir -p "$DESTINO"
 ./editar.sh "$(ls -t saida/video1/*.webm | head -1)" "$DESTINO/demo-notificacao" 19.5 "0.4:22.3:1"
 ./editar.sh "$(ls -t saida/video2/*.webm | head -1)" "$DESTINO/demo-orcamento"   17.5 "0.5:20.1:1"
