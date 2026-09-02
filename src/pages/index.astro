@@ -807,6 +807,20 @@ const jsonLd = {
               <p class="mt-3 text-[0.95rem] text-grafite">
                 Sem cartão, sem compromisso. Só te chamo se fizer sentido pra você.
               </p>
+              <!--
+                O aviso fica no ponto do envio, e não escondido no rodapé: é ali
+                que a pessoa entrega o dado, e é ali que ela precisa saber o que
+                será feito com ele. Texto curto de propósito — parágrafo de
+                consentimento ninguém lê, e um link que se pode abrir vale mais
+                que três linhas que se pula.
+              -->
+              <p class="mt-2 text-[0.88rem] text-grafite">
+                Ao enviar, você concorda com os
+                <a href="/termos" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">termos de uso</a>
+                e com o tratamento dos seus dados conforme a
+                <a href="/privacidade" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">política de privacidade</a>.
+                Uso seu contato só para falar sobre o SindiOps.
+              </p>
               <p id="erro-geral" class="mt-3 hidden font-bold text-carimbo" role="alert"></p>
             </div>
           </form>
@@ -835,6 +849,14 @@ const jsonLd = {
               contato@sindiops.com.br
             </a>
           </p>
+          <nav class="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+            <a href="/termos" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+              Termos de uso
+            </a>
+            <a href="/privacidade" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+              Política de privacidade
+            </a>
+          </nav>
         </div>
 
         <!--

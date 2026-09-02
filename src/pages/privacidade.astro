@@ -1,0 +1,332 @@
+---
+import Documento from '../layouts/Documento.astro';
+import { obterControlador } from '../lib/controlador';
+
+/** Ver a nota em `termos.astro`: renderizada por requisição, cacheada na borda. */
+export const prerender = false;
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+const controlador = await obterControlador();
+
+const VERSAO = '1.0';
+const VIGENTE_DESDE = '2 de setembro de 2026';
+
+const indisponivel = 'não informado — peça a identificação completa em contato@sindiops.com.br';
+
+/** Ver a nota em `termos.astro`: montada aqui para não sobrar espaço antes da vírgula. */
+const identificacao = [
+  controlador.legal_name ?? indisponivel,
+  controlador.cnpj ? `CNPJ nº ${controlador.cnpj}` : null,
+  controlador.address ? `com sede em ${controlador.address}` : null,
+].filter(Boolean).join(', ');
+
+const encarregado = controlador.dpo_name ? `${controlador.dpo_name}, ` : '';
+
+/**
+ * Operadores que efetivamente tocam dado, com a finalidade de cada um. A lista
+ * é o inverso de decorativa: se um serviço entra no produto e não entra aqui, a
+ * política passa a mentir — e é ela que o cliente mostra ao condomínio quando
+ * perguntam por onde os documentos passam.
+ */
+const operadores = [
+  {
+    nome: 'OpenAI ou Microsoft Azure OpenAI',
+    finalidade:
+      'Gerar a resposta da consulta, ler as propostas de orçamento e redigir pareceres e recomendações. Recebe trechos dos documentos relevantes à pergunta, não o acervo inteiro.',
+    local: 'Estados Unidos ou região configurada no Azure',
+  },
+  {
+    nome: 'Voyage AI',
+    finalidade:
+      'Converter trechos dos documentos em representações numéricas (embeddings), que é o que permite localizar o artigo certo na convenção.',
+    local: 'Estados Unidos',
+  },
+  {
+    nome: 'Resend',
+    finalidade: 'Enviar e-mails do produto: convite, redefinição de senha, edital ao fornecedor e documentos que você decide enviar.',
+    local: 'Estados Unidos',
+  },
+  {
+    nome: 'minha-receita.org',
+    finalidade:
+      'Consultar dados públicos de CNPJ para preencher cadastros de escritório, condomínio e fornecedor. Recebe apenas o número do CNPJ consultado — dado de pessoa jurídica, não pessoal.',
+    local: 'Brasil',
+  },
+  {
+    nome: 'Vercel',
+    finalidade: 'Hospedar este site e medir audiência agregada das páginas públicas.',
+    local: 'Rede global de distribuição',
+  },
+  {
+    nome: 'Google (Tag Manager e Analytics)',
+    finalidade:
+      'Medir a eficácia das campanhas que trazem visitantes a este site. Presente apenas nas páginas públicas de divulgação — não na aplicação, nem nesta página.',
+    local: 'Estados Unidos',
+  },
+];
+---
+
+<Documento
+  titulo="Política de Privacidade"
+  descricao="Quais dados o SindiOps trata, por quê, com quem compartilha, por quanto tempo guarda e como exercer seus direitos."
+  caminho="/privacidade"
+  versao={`v${VERSAO}`}
+  vigenteDesde={VIGENTE_DESDE}
+>
+  <p class="destaque">
+    Esta política descreve o que fazemos com dados pessoais em duas situações diferentes: quando <strong>você</strong>
+    nos procura ou usa a aplicação, e quando <strong>seu condomínio</strong> tem dados tratados dentro dela. Os papéis
+    são distintos nos dois casos, e é isso que a seção 2 explica.
+  </p>
+
+  <h2>1. Quem trata os dados</h2>
+
+  <p>{identificacao}.</p>
+
+  <p>
+    Encarregado pelo tratamento de dados pessoais (LGPD, art. 41): {encarregado}<a
+      href={`mailto:${controlador.dpo_email}`}>{controlador.dpo_email}</a
+    >.
+  </p>
+
+  <h2>2. Dois papéis diferentes, e por que isso importa</h2>
+
+  <p>
+    <strong>Somos controladores</strong> dos dados de quem nos procura e de quem usa a aplicação: seu nome, e-mail,
+    WhatsApp e dados de acesso. São dados que coletamos para a nossa própria finalidade — atender você, manter sua
+    conta, cobrar pelo serviço.
+  </p>
+
+  <p>
+    <strong>Somos operadores</strong> dos dados que você insere sobre o condomínio que administra: moradores cadastrados
+    nas unidades, conteúdo dos documentos enviados, dados dos fornecedores. Aí o controlador é você (ou o condomínio),
+    e nós tratamos esses dados <em>seguindo as suas instruções</em>, para prestar o serviço contratado — e nada além
+    disso.
+  </p>
+
+  <p>
+    Essa distinção não é formalidade: significa que, quando um morador pedir a exclusão dos dados dele, quem decide é o
+    controlador — você —, e nós executamos. E significa que <strong>não usamos o conteúdo dos documentos do seu
+    condomínio para nenhuma finalidade nossa</strong>: nem análise de mercado, nem melhoria de produto, nem treinamento
+    de modelos de inteligência artificial.
+  </p>
+
+  <h2>3. Que dados tratamos</h2>
+
+  <h3>3.1 Quando você pede acesso por este site</h3>
+
+  <p>
+    O formulário coleta <strong>nome, WhatsApp, e-mail e a faixa de quantos condomínios você administra</strong>, mais
+    o <strong>nome do escritório ou administradora</strong> que você representa — este último é opcional, porque quem é
+    síndico do próprio prédio não tem escritório nenhum. Coletamos também a origem da campanha que trouxe você até aqui
+    (parâmetro <code>utm_source</code>, quando presente). A finalidade é
+    uma só: entrar em contato para avaliar se o produto faz sentido para o seu caso. Base legal: seus dados são
+    fornecidos por você mesmo, mediante consentimento manifestado ao enviar o formulário, no interesse de tratativas
+    preliminares de contrato (LGPD, art. 7º, I e V).
+  </p>
+
+  <h3>3.2 Quando você usa a aplicação</h3>
+
+  <ul>
+    <li>
+      <strong>Sua conta:</strong> nome, e-mail, senha (guardada apenas como resumo criptográfico, jamais em texto
+      legível), e — se você ativar — segredo de autenticação em duas etapas e chaves de acesso registradas.
+    </li>
+    <li>
+      <strong>Seu escritório e seus condomínios:</strong> razão social, CNPJ, endereço, telefone, e-mail e nome do
+      síndico.
+    </li>
+    <li>
+      <strong>Unidades:</strong> nome, e-mail e telefone de moradores. Esse cadastro existe porque notificação e
+      advertência precisam de destinatário — e é o único lugar do produto onde apagar um registro apaga de verdade,
+      que é o caminho previsto pela LGPD quando o titular pede.
+    </li>
+    <li>
+      <strong>Documentos enviados:</strong> convenção, regimento interno e atas. Podem conter dados pessoais e, em
+      atas, dados sensíveis — inadimplência, conflito entre vizinhos, questões de saúde. É por isso que o
+      armazenamento é privado e sem link público.
+    </li>
+    <li>
+      <strong>Consultas e documentos gerados:</strong> a pergunta feita, a resposta, os trechos citados e o texto
+      final. São registro de fundamentação da decisão e por isso não são apagados por engano — ver a seção 6.
+    </li>
+    <li>
+      <strong>Fornecedores e propostas:</strong> razão social, CNPJ, contato, endereço, situação cadastral na Receita
+      Federal e o conteúdo das propostas recebidas.
+    </li>
+    <li>
+      <strong>Registros técnicos:</strong> data e hora de acesso, endereço IP e erros do sistema, mantidos para
+      segurança e diagnóstico.
+    </li>
+  </ul>
+
+  <p>
+    Base legal para o uso da aplicação: <strong>execução do contrato</strong> (LGPD, art. 7º, V) para os dados da sua
+    conta, e <strong>legítimo interesse</strong> (art. 7º, IX) para segurança e prevenção a fraude. Para os dados de
+    moradores e do condomínio, a base legal é definida por você, na condição de controlador.
+  </p>
+
+  <h2>4. Cookies e medição</h2>
+
+  <p>
+    <strong>Neste site</strong> usamos Google Tag Manager e a medição de audiência da Vercel para entender quais
+    campanhas trazem visitantes. Você pode bloqueá-los nas configurações do navegador ou por extensão — o formulário
+    continua funcionando. Esta página e a de termos <strong>não carregam nenhum rastreador</strong>: medir o clique de
+    quem foi ler a política de privacidade seria contradizê-la.
+  </p>
+
+  <p>
+    <strong>Na aplicação não há rastreamento publicitário nem analytics de terceiros.</strong> Os únicos cookies são os
+    que fazem o produto funcionar: identificação da sua sessão, proteção contra falsificação de requisição, e as suas
+    preferências de tema, tamanho de fonte e menu lateral. Nenhum deles é compartilhado.
+  </p>
+
+  <h2>5. Com quem compartilhamos</h2>
+
+  <p>
+    <strong>Não vendemos dados pessoais e não os cedemos para publicidade de terceiros.</strong> O compartilhamento se
+    limita aos operadores necessários para o serviço funcionar:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Operador</th>
+        <th>Para quê</th>
+        <th>Onde processa</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        operadores.map((operador) => (
+          <tr>
+            <td><strong>{operador.nome}</strong></td>
+            <td>{operador.finalidade}</td>
+            <td>{operador.local}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <p>
+    <strong>Sobre treinamento de modelos:</strong> contratamos os provedores de inteligência artificial em modalidade
+    que não autoriza o uso do conteúdo enviado para treinar modelos. Ainda assim, a recomendação vale: o que entra no
+    produto é documento do condomínio, e essa é uma razão a mais para não subir arquivo que não precise estar lá.
+  </p>
+
+  <p>
+    <strong>Transferência internacional.</strong> Parte dos operadores processa dados fora do Brasil, como indicado na
+    tabela. A transferência se apoia em cláusulas contratuais dos respectivos contratos e na necessidade de execução do
+    contrato firmado com você (LGPD, art. 33, II e IX).
+  </p>
+
+  <p>
+    Também compartilhamos dados quando houver <strong>obrigação legal ou ordem judicial</strong>, e nesse caso
+    informaremos você, salvo quando a própria ordem o proibir.
+  </p>
+
+  <h2>6. Por quanto tempo guardamos</h2>
+
+  <ul>
+    <li>
+      <strong>Solicitação de acesso descartada:</strong> apagada em definitivo <strong>180 dias</strong> após o
+      descarte, por rotina automática diária. Apaga de verdade — esconder da tela continuaria guardando o dado.
+    </li>
+    <li>
+      <strong>Solicitação que virou conta:</strong> mantida enquanto durar a conta, porque é o registro de como o
+      cliente chegou até nós.
+    </li>
+    <li>
+      <strong>Dados da conta e do condomínio:</strong> mantidos enquanto a conta existir. Encerrada a conta, você tem
+      <strong>30 dias</strong> para solicitar a exportação; depois disso, os dados são eliminados.
+    </li>
+    <li>
+      <strong>Consultas e documentos gerados:</strong> preservados enquanto a conta existir, inclusive quando removidos
+      da tela. São o registro de por que uma decisão foi tomada — apagar isso destruiria justamente a defesa do
+      síndico, que é a razão de o produto existir. Continuam sujeitos à eliminação no encerramento da conta.
+    </li>
+    <li>
+      <strong>Dados de morador nas unidades:</strong> apagados imediatamente e em definitivo quando você remove o
+      registro.
+    </li>
+    <li>
+      <strong>Registros técnicos:</strong> mantidos por até 6 meses; os registros de acesso a aplicações de internet,
+      pelos 6 meses que o Marco Civil da Internet exige (Lei 12.965/2014, art. 15).
+    </li>
+  </ul>
+
+  <h2>7. Como protegemos</h2>
+
+  <ul>
+    <li>Tráfego cifrado em trânsito e senhas guardadas apenas como resumo criptográfico.</li>
+    <li>
+      Autenticação em duas etapas e chaves de acesso (passkeys) disponíveis para todas as contas.
+    </li>
+    <li>
+      <strong>Arquivos nunca saem por link público.</strong> Cada abertura de documento é autorizada na hora, contra a
+      sua sessão — um endereço copiado não abre nada fora dela, e revogar um acesso tem efeito imediato.
+    </li>
+    <li>
+      <strong>Isolamento entre clientes verificado por teste automatizado.</strong> Nenhum usuário de um escritório
+      alcança dado de outro; dentro do mesmo escritório, o acesso é limitado aos condomínios vinculados à pessoa.
+    </li>
+    <li>Cópias de segurança do banco e do armazenamento de arquivos, com possibilidade de recuperação a ponto no tempo.</li>
+  </ul>
+
+  <p>
+    Nenhum sistema é imune. Em caso de incidente com risco relevante aos titulares, comunicaremos os afetados e a
+    Autoridade Nacional de Proteção de Dados nos prazos da lei.
+  </p>
+
+  <h2>8. Seus direitos</h2>
+
+  <p>A LGPD (art. 18) garante a você o direito de:</p>
+
+  <ul>
+    <li>confirmar que tratamos seus dados e acessá-los;</li>
+    <li>corrigir dados incompletos, inexatos ou desatualizados;</li>
+    <li>pedir anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desconformidade;</li>
+    <li>solicitar a portabilidade a outro fornecedor;</li>
+    <li>revogar o consentimento e pedir a eliminação dos dados tratados com base nele;</li>
+    <li>ser informado sobre com quem compartilhamos seus dados;</li>
+    <li>opor-se a tratamento feito com base em legítimo interesse.</li>
+  </ul>
+
+  <p>
+    Para exercer qualquer um deles, escreva para
+    <a href={`mailto:${controlador.dpo_email}`}>{controlador.dpo_email}</a>. Respondemos em até <strong>15 dias</strong>.
+    Podemos pedir confirmação de identidade antes de atender — é o que impede que um pedido de exclusão feito por
+    terceiro apague os seus dados.
+  </p>
+
+  <p>
+    <strong>Se você é morador de um condomínio</strong> e seus dados estão na aplicação, o controlador é o síndico ou o
+    escritório que administra o prédio: dirija o pedido a ele. Escreva para nós assim mesmo se não souber a quem
+    recorrer — encaminhamos ao cliente responsável e acompanhamos o atendimento.
+  </p>
+
+  <h2>9. Crianças e adolescentes</h2>
+
+  <p>
+    O serviço é destinado a síndicos e profissionais de administração condominial, maiores de 18 anos. Não coletamos
+    dados de crianças e adolescentes de forma intencional. Cadastro de unidade que inclua menor deve observar as regras
+    específicas do art. 14 da LGPD, sob responsabilidade do controlador.
+  </p>
+
+  <h2>10. Mudanças nesta política</h2>
+
+  <p>
+    Esta política pode ser atualizada. A versão vigente fica sempre nesta página, identificada no topo, e mudanças
+    relevantes são comunicadas por e-mail e dentro do produto com antecedência mínima de 30 dias.
+  </p>
+
+  <hr />
+
+  <p class="nota">
+    Dúvidas sobre esta política ou sobre seus dados:
+    <a href={`mailto:${controlador.dpo_email}`}>{controlador.dpo_email}</a>. Sobre as condições de uso, veja os
+    <a href="/termos">Termos de uso</a>.
+  </p>
+</Documento>

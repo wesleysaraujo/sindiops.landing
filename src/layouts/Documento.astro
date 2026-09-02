@@ -1,0 +1,115 @@
+---
+import '../styles/global.css';
+
+/**
+ * Casca das páginas de documento — termos de uso e política de privacidade.
+ *
+ * Existe porque são duas páginas com o mesmo `head`, o mesmo cabeçalho e o
+ * mesmo rodapé, e a landing não tinha layout nenhum: `index.astro` é página
+ * única e carregava tudo dentro de si. Duplicar o `head` em três arquivos
+ * garantiria que um deles ficasse para trás na primeira mudança.
+ *
+ * **Sem Google Tag Manager e sem analytics.** O rastreamento da landing existe
+ * para medir conversão de campanha; aqui não há campanha nenhuma — quem abre
+ * a política de privacidade está exercendo o direito de saber o que se faz com
+ * o dado dele, e medir esse clique seria a contradição mais barata do produto.
+ * Isso também mantém as duas páginas fora do escopo de consentimento de
+ * cookies: não há o que consentir.
+ */
+interface Props {
+  titulo: string;
+  descricao: string;
+  caminho: string;
+  vigenteDesde: string;
+  versao: string;
+}
+
+const { titulo, descricao, caminho, vigenteDesde, versao } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{titulo} — SindiOps</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={`https://sindiops.com.br${caminho}`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="SindiOps" />
+    <meta property="og:title" content={`${titulo} — SindiOps`} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={`https://sindiops.com.br${caminho}`} />
+
+    <link rel="preload" href="/fonts/besley-v22-latin-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/atkinson-hyperlegible-v12-latin_latin-ext-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+
+  <body class="bg-papel text-tinta font-corpo antialiased">
+    <header class="border-b border-fiopapel">
+      <div class="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-5 md:px-8">
+        <a href="/" class="font-display text-xl font-bold text-tinta">SindiOps</a>
+        <a
+          href="/#acesso"
+          class="text-[0.95rem] underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+        >
+          Acesso antecipado
+        </a>
+      </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-3xl px-5 py-12 md:px-8 md:py-16">
+      <p class="font-protocolo text-[0.78rem] tracking-wide text-grafite uppercase">
+        Documento {versao} · vigente desde {vigenteDesde}
+      </p>
+
+      <h1 class="font-display mt-3 text-[2rem] font-bold md:text-[2.6rem]">{titulo}</h1>
+
+      <!--
+        `documento-legal` está no global.css e é o que dá ritmo de leitura a
+        texto corrido longo sem espalhar classe por cada parágrafo. Documento
+        jurídico é lido em diagonal até a pessoa achar a cláusula que procura —
+        hierarquia forte de título importa mais aqui do que na landing.
+      -->
+      <div class="documento-legal mt-10">
+        <slot />
+      </div>
+    </main>
+
+    <footer class="border-t border-fiopapel">
+      <div
+        class="mx-auto flex w-full max-w-3xl flex-col gap-4 px-5 py-10 text-[0.95rem] text-grafite md:flex-row md:items-center md:justify-between md:px-8"
+      >
+        <div>
+          <p class="font-bold text-tinta">SindiOps</p>
+          <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
+        </div>
+
+        <nav class="flex flex-wrap gap-x-5 gap-y-2">
+          <a href="/termos" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            Termos de uso
+          </a>
+          <a href="/privacidade" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            Privacidade
+          </a>
+          <a
+            href="mailto:contato@sindiops.com.br"
+            class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+          >
+            contato@sindiops.com.br
+          </a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

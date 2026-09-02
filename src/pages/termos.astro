@@ -1,0 +1,258 @@
+---
+import Documento from '../layouts/Documento.astro';
+import { obterControlador } from '../lib/controlador';
+
+/**
+ * Renderizada por requisição, e não no build: a identificação do controlador
+ * vem do app, e ler no build congelaria aqui uma cópia que envelhece sozinha.
+ * Assim, mudar o dado lá atualiza as duas superfícies sem um deploy desta
+ * landing só para isso. O cache de borda abaixo devolve o desempenho de página
+ * estática.
+ */
+export const prerender = false;
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+const controlador = await obterControlador();
+
+const VERSAO = '1.0';
+const VIGENTE_DESDE = '2 de setembro de 2026';
+
+const indisponivel = 'não informado — peça a identificação completa em contato@sindiops.com.br';
+
+/**
+ * A identificação é montada aqui, e não intercalando expressões no markup: no
+ * HTML, a quebra de linha entre duas expressões vira espaço, e o resultado sai
+ * "RAZÃO SOCIAL , inscrita no CNPJ" — pontuação solta num documento que é lido
+ * justamente por quem repara nesse tipo de coisa.
+ */
+const identificacao = [
+  controlador.legal_name ?? indisponivel,
+  controlador.cnpj ? `inscrita no CNPJ sob o nº ${controlador.cnpj}` : null,
+  controlador.address ? `com sede em ${controlador.address}` : null,
+].filter(Boolean).join(', ');
+---
+
+<Documento
+  titulo="Termos de uso"
+  descricao="Condições de uso do SindiOps: o que a ferramenta faz, o que ela não decide, e de quem é cada responsabilidade."
+  caminho="/termos"
+  versao={`v${VERSAO}`}
+  vigenteDesde={VIGENTE_DESDE}
+>
+  <p class="destaque">
+    O SindiOps é uma ferramenta de apoio à decisão do síndico. Ele mostra a fonte de cada resposta para que você possa
+    conferi-la — <strong>ele não decide por você e não substitui orientação jurídica</strong>. Quem assina a circular,
+    a notificação e o contrato continua sendo você, e é a sua justificativa que fica registrada.
+  </p>
+
+  <h2>1. Quem somos</h2>
+
+  <p>
+    O SindiOps é operado por {identificacao}. Contato:
+    <a href="mailto:contato@sindiops.com.br">contato@sindiops.com.br</a>.
+  </p>
+
+  <p>
+    Ao usar o SindiOps — o site <strong>sindiops.com.br</strong> ou a aplicação
+    <strong>app.sindiops.com.br</strong> — você concorda com estes termos. Se não concordar, não use o serviço.
+  </p>
+
+  <h2>2. O que o serviço faz</h2>
+
+  <p>O SindiOps organiza duas decisões do síndico e guarda o registro de como cada uma foi tomada:</p>
+
+  <ul>
+    <li>
+      <strong>Decidir com documento.</strong> Você envia a convenção, o regimento e as atas do condomínio; o sistema
+      indexa esses arquivos e responde às suas perguntas <em>citando o trecho</em> que fundamenta a resposta. A partir
+      daí, gera rascunhos de circular, notificação e advertência.
+    </li>
+    <li>
+      <strong>Decidir com dinheiro.</strong> Você define o que quer contratar e o peso de cada critério; o sistema gera
+      o edital, envia aos fornecedores, lê as propostas recebidas mostrando a linha que comprova cada valor, calcula a
+      nota pela fórmula que você configurou e escreve um parecer. A contratação é ato seu.
+    </li>
+  </ul>
+
+  <h2>3. O que o serviço não é</h2>
+
+  <p>
+    <strong>Não é consultoria jurídica.</strong> As respostas apontam trechos dos documentos do seu condomínio para que
+    você mesmo os leia e avalie. Situações que envolvam lei federal, jurisprudência ou disputa entre partes são
+    sinalizadas na tela justamente para que você consulte um advogado.
+  </p>
+
+  <p>
+    <strong>Não é sistema de gestão financeira do condomínio.</strong> Não emitimos boleto, não fazemos rateio nem
+    prestação de contas.
+  </p>
+
+  <p>
+    <strong>Não decide contratação.</strong> A nota de cada proposta é uma fórmula aritmética sobre valores que
+    <em>você</em> confirmou, com pesos que <em>você</em> definiu — refazível a lápis. O parecer e a recomendação são
+    texto de apoio; escolher o fornecedor é ato seu, registrado com a sua justificativa.
+  </p>
+
+  <h2>4. Conteúdo gerado por inteligência artificial</h2>
+
+  <p>
+    Respostas de consulta, pareceres de proposta, editais e documentos são produzidos com apoio de modelos de
+    linguagem. Isso implica limites que você precisa conhecer antes de usar o resultado:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Todo conteúdo gerado nasce como rascunho e exige a sua revisão.</strong> Nenhum documento é entregue a
+      terceiro sem que você o finalize — e finalizar é a declaração de que aquele texto é o que vai ser entregue.
+    </li>
+    <li>
+      <strong>O sistema é construído para não inventar fonte.</strong> Resposta sem trecho localizado nos seus
+      documentos vira "não encontrei"; valor de proposta cuja linha não existe no arquivo é descartado. Ainda assim,
+      transcrição de documento escaneado pode conter imprecisão — arquivos processados por reconhecimento de texto vêm
+      marcados na tela por essa razão.
+    </li>
+    <li>
+      <strong>A responsabilidade pelo uso do texto é de quem o assina.</strong> Conferir a citação antes de notificar,
+      multar ou contratar é parte do seu trabalho, e o produto existe para tornar essa conferência possível — não para
+      dispensá-la.
+    </li>
+  </ul>
+
+  <h2>5. Conta e acesso</h2>
+
+  <p>
+    <strong>Não há autocadastro.</strong> As contas são criadas pela nossa equipe a partir de uma solicitação, e o
+    responsável define a própria senha por link enviado ao seu e-mail. O dono da conta pode convidar outras pessoas,
+    dentro do limite do plano, e definir a quais condomínios cada uma tem acesso.
+  </p>
+
+  <p>
+    Você é responsável por manter suas credenciais em sigilo e por tudo o que for feito com elas. Oferecemos
+    autenticação em duas etapas e chaves de acesso (passkeys) — recomendamos ativar. Suspeita de acesso indevido deve
+    ser comunicada imediatamente pelos canais de contato.
+  </p>
+
+  <p>Cada e-mail corresponde a uma única pessoa no sistema, e contas não podem ser compartilhadas entre pessoas.</p>
+
+  <h2>6. Suas responsabilidades sobre o conteúdo</h2>
+
+  <p>
+    Os documentos e dados que você envia continuam sendo seus — e a responsabilidade por eles também. Ao usar o
+    serviço, você declara que:
+  </p>
+
+  <ul>
+    <li>
+      tem legitimidade para enviar a convenção, o regimento, as atas e as propostas do condomínio que administra, e
+      para registrar os dados de moradores no cadastro de unidades;
+    </li>
+    <li>
+      possui base legal adequada para o tratamento desses dados pessoais de terceiros, do qual você é o controlador e
+      nós somos operadores — os detalhes estão na
+      <a href="/privacidade">Política de Privacidade</a>;
+    </li>
+    <li>
+      não usará o serviço para conteúdo ilícito, para fins que violem direitos de terceiros, nem para tentar burlar
+      limites do plano, obter acesso a dados de outros clientes ou sobrecarregar a infraestrutura.
+    </li>
+  </ul>
+
+  <p>
+    O isolamento entre clientes é requisito de arquitetura: nenhum usuário de um escritório alcança dados de outro, e
+    dentro do mesmo escritório o acesso é limitado aos condomínios vinculados a cada pessoa.
+  </p>
+
+  <h2>7. Planos, limites e pagamento</h2>
+
+  <p>
+    A cobrança é <strong>por condomínio ativo</strong>. Arquivar um condomínio devolve a vaga do plano na hora e não
+    apaga nada — documentos, consultas e histórico permanecem, e reativá-lo consome vaga novamente. O plano também
+    define quantas pessoas têm acesso à conta (contando o dono) e quantos processos de orçamento podem ser abertos por
+    mês.
+  </p>
+
+  <p>
+    Contas novas podem começar em período de avaliação gratuito, com prazo informado na própria tela "Meu plano".
+    <strong>Não há cobrança automática nem mudança de plano com um clique</strong>: ampliar limite ou trocar de plano
+    passa por conversa com a nossa equipe, e é ali que preço, forma e periodicidade de pagamento são acordados. Enquanto
+    não houver contratação, o serviço não gera cobrança.
+  </p>
+
+  <p>Reajustes e mudanças de preço são comunicados com antecedência mínima de 30 dias e nunca retroagem.</p>
+
+  <h2>8. Disponibilidade e suporte</h2>
+
+  <p>
+    Trabalhamos para manter o serviço disponível, mas ele é fornecido "no estado em que se encontra", sem garantia de
+    funcionamento ininterrupto. Manutenções programadas são avisadas quando previsíveis. Partes do produto dependem de
+    serviços de terceiros — provedores de modelo de linguagem, envio de e-mail e a base pública de CNPJ — e a
+    indisponibilidade deles pode afetar funcionalidades específicas sem que isso caracterize falha do serviço como um
+    todo. Onde essa dependência existe, o produto oferece caminho manual: consulta de CNPJ fora do ar não impede
+    cadastrar um fornecedor.
+  </p>
+
+  <h2>9. Propriedade intelectual</h2>
+
+  <p>
+    O software, a marca, o design e a documentação do SindiOps são nossos. Você recebe uma licença de uso não exclusiva
+    e intransferível enquanto durar a contratação — o que não inclui copiar, redistribuir, fazer engenharia reversa ou
+    revender o serviço.
+  </p>
+
+  <p>
+    <strong>Os documentos que você envia e o conteúdo gerado a partir deles são seus.</strong> Não reivindicamos
+    propriedade sobre a convenção do seu condomínio nem sobre a circular que você redigiu.
+  </p>
+
+  <h2>10. Suspensão e encerramento</h2>
+
+  <p>
+    Você pode encerrar a conta a qualquer momento, pelos canais de contato. Podemos suspender ou encerrar o acesso em
+    caso de descumprimento destes termos, inadimplência ou uso que ameace a segurança do serviço — sempre com aviso
+    prévio, exceto quando a suspensão imediata for necessária para conter dano em curso.
+  </p>
+
+  <p>
+    Encerrada a conta, você pode solicitar a exportação dos seus documentos e registros dentro de <strong>30 dias</strong>.
+    Depois desse prazo, os dados são eliminados conforme a
+    <a href="/privacidade">Política de Privacidade</a>, ressalvado o que a lei obrigue a conservar.
+  </p>
+
+  <h2>11. Limitação de responsabilidade</h2>
+
+  <p>
+    O SindiOps não responde por decisões tomadas pelo usuário, ainda que apoiadas em conteúdo produzido pela
+    ferramenta — é para isso que cada resposta traz a fonte à vista e cada documento passa pela sua revisão antes de
+    sair. Não respondemos por lucros cessantes, por conteúdo de documentos enviados pelo cliente nem por
+    indisponibilidade de serviços de terceiros.
+  </p>
+
+  <p>
+    Nas hipóteses em que houver responsabilidade nossa, ela fica limitada ao valor pago pelo cliente nos 12 meses
+    anteriores ao evento. Nada aqui afasta direitos previstos no Código de Defesa do Consumidor quando aplicável.
+  </p>
+
+  <h2>12. Mudanças nestes termos</h2>
+
+  <p>
+    Estes termos podem ser atualizados. Mudanças relevantes são comunicadas por e-mail e dentro do produto com
+    antecedência mínima de 30 dias, e a versão vigente fica sempre nesta página, identificada no topo. Cada versão tem
+    identificador próprio, e o aceite registrado na sua conta guarda <em>qual</em> versão você aceitou e quando —
+    aceite que não identifica o que foi aceito não prova nada.
+  </p>
+
+  <h2>13. Lei aplicável e foro</h2>
+
+  <p>
+    Estes termos são regidos pela lei brasileira. Fica eleito o foro da comarca do domicílio do usuário para dirimir
+    controvérsias, quando aplicável a legislação consumerista; nos demais casos, o foro da sede do SindiOps.
+  </p>
+
+  <hr />
+
+  <p class="nota">
+    Dúvidas sobre estes termos: <a href="mailto:contato@sindiops.com.br">contato@sindiops.com.br</a>. Sobre tratamento
+    de dados, veja a <a href="/privacidade">Política de Privacidade</a>.
+  </p>
+</Documento>

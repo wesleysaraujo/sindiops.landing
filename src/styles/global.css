@@ -167,3 +167,121 @@ label:has(input[type="radio"]:focus-visible) {
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0.45'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
   mask-size: 120px 120px;
 }
+
+/* ---------- Documento legal ---------- */
+
+/*
+  Termos e privacidade são texto corrido longo, lido em diagonal até a pessoa
+  achar a cláusula que procura. Estilo por descendência e não por classe em cada
+  elemento: o conteúdo dessas páginas é escrito como prosa, e obrigar quem
+  redige a decorar utilitários faria a revisão jurídica passar pelo front-end.
+*/
+
+.documento-legal {
+  font-size: 1.03rem;
+  line-height: 1.75;
+}
+
+.documento-legal h2 {
+  font-family: var(--fonte-display);
+  font-weight: 800;
+  font-size: 1.45rem;
+  margin-top: 2.75rem;
+  margin-bottom: 0.85rem;
+  scroll-margin-top: 2rem;
+}
+
+.documento-legal h3 {
+  font-weight: 700;
+  font-size: 1.12rem;
+  margin-top: 1.85rem;
+  margin-bottom: 0.6rem;
+}
+
+.documento-legal p,
+.documento-legal ul,
+.documento-legal ol {
+  margin-bottom: 1.1rem;
+}
+
+.documento-legal ul,
+.documento-legal ol {
+  padding-left: 1.5rem;
+}
+
+.documento-legal ul {
+  list-style: disc;
+}
+
+.documento-legal ol {
+  list-style: decimal;
+}
+
+.documento-legal li {
+  margin-bottom: 0.55rem;
+}
+
+.documento-legal a {
+  color: var(--tinta);
+  text-decoration: underline;
+  text-decoration-color: var(--azul-caneta);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.documento-legal code {
+  font-family: var(--fonte-protocolo);
+  font-size: 0.9em;
+  background: color-mix(in srgb, var(--fio-papel) 45%, transparent);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.documento-legal hr {
+  border: 0;
+  border-top: 1px solid var(--fio-papel);
+  margin: 2.5rem 0 1.5rem;
+}
+
+/* Abre a leitura: a primeira coisa que a pessoa lê é o resumo honesto do que
+   vem abaixo, não a cláusula 1. */
+.documento-legal .destaque {
+  border-left: 3px solid var(--azul-caneta);
+  padding-left: 1.1rem;
+  font-size: 1.08rem;
+}
+
+.documento-legal .nota {
+  color: var(--grafite);
+  font-size: 0.95rem;
+}
+
+/* Tabela de operadores: em telas estreitas rola dentro de si, nunca empurra a
+   página — corpo com rolagem horizontal é o defeito que some no desktop de
+   quem escreveu e aparece no celular de quem lê. */
+.documento-legal table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.documento-legal th,
+.documento-legal td {
+  border-bottom: 1px solid var(--fio-papel);
+  padding: 0.7rem 0.9rem 0.7rem 0;
+  text-align: left;
+  vertical-align: top;
+  min-width: 11rem;
+}
+
+.documento-legal th {
+  font-family: var(--fonte-protocolo);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--grafite);
+  border-bottom-width: 2px;
+}
