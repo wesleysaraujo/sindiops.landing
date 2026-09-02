@@ -1,4 +1,5 @@
 ---
+import { existsSync } from 'node:fs';
 import '../styles/global.css';
 
 // SindiOps — landing de acesso antecipado.
@@ -19,6 +20,21 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','${gtmId}');`;
+
+/**
+ * O vídeo da segunda capacidade só entra na página quando o arquivo existe.
+ *
+ * Sem esta checagem, o markup publicado apontaria para um `.mp4` ausente: o
+ * `<video>` falha, cai no `<img>` de fallback — que também não existe — e a
+ * seção que deveria provar o produto exibe um ícone de imagem quebrada.
+ * Página de vendas com imagem quebrada não é um defeito estético; é a primeira
+ * evidência que o visitante tem sobre o cuidado de quem fez o software.
+ *
+ * Roda no build (página estática), então não custa nada em runtime. Quando o
+ * arquivo for gravado e commitado, o bloco aparece sozinho — sem tocar em
+ * código. Roteiro em `app.sindiops/docs/roteiro-videos.md`.
+ */
+const temVideoOrcamento = existsSync('public/img/demo-orcamento.mp4');
 
 const faq = [
   {
@@ -294,9 +310,14 @@ const jsonLd = {
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Veja funcionando</h2>
           <!--
-            Gravação real do produto (Regimento Interno do Condomínio Dom Lucas),
-            do começo ao fim: pergunta → resposta com artigo citado → notificação
-            para a unidade → revisão do rascunho → documento finalizado.
+            Gravação real do produto, do começo ao fim: pergunta → resposta com
+            artigo citado → notificação para a unidade → revisão do rascunho →
+            documento finalizado.
+
+            Roteiro cena a cena e configuração de captura em
+            `app.sindiops/docs/roteiro-videos.md`; o cenário gravado sai de
+            `php artisan demo:prepare`, que o reconstrói igual toda vez — quem
+            grava erra a tomada e precisa reencontrar a mesma tela.
           -->
           <video
             class="mt-6 w-full rounded-sm border border-fiopapel"
@@ -417,6 +438,49 @@ const jsonLd = {
             </figcaption>
           </figure>
         </div>
+
+        <!--
+          A demonstração da segunda capacidade.
+
+          Fica **depois** da figura estática, não no lugar dela: a figura é lida
+          em meio segundo e sustenta a seção mesmo para quem não dá play, para
+          quem tem `prefers-reduced-motion` e para quem chegou com a rede ruim.
+          O vídeo aprofunda; ele não é o único caminho para a prova.
+
+          As notas (8,4 · 7,1 · 6,3) precisam bater com as da tabela acima —
+          divergir aqui é a página se contradizendo a poucos centímetros, na
+          frente de quem está avaliando justamente se confia nela. É por isso
+          que o cenário do `demo:prepare` fixa esses números.
+        -->
+        {
+          temVideoOrcamento && (
+          <div class="mt-14 md:mt-16">
+            <h3 class="font-display text-[1.25rem] font-bold md:text-[1.5rem]">Do orçamento recebido à recomendação</h3>
+            <video
+              class="mt-5 w-full rounded-sm border border-fiopapel"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="/img/demo-orcamento-poster.webp"
+              aria-label="Demonstração do SindiOps: os critérios de avaliação com seus pesos, a proposta lida com a garantia de cinco anos apontando a linha que a comprova, e o comparativo com as notas 8,4, 7,1 e 6,3 e o parecer de cada escolha"
+            >
+              <source src="/img/demo-orcamento.webm" type="video/webm" />
+              <source src="/img/demo-orcamento.mp4" type="video/mp4" />
+              <img
+                src="/img/demo-orcamento-poster.webp"
+                alt="Comparativo de três propostas de impermeabilização no SindiOps, com as notas 8,4, 7,1 e 6,3 e o parecer de cada escolha"
+                class="w-full"
+              />
+            </video>
+            <p class="mt-3 text-[0.95rem] text-grafite">
+              Os pesos entram antes das propostas. Cada valor aponta a linha que o comprova, e a nota é uma conta que
+              você refaz no papel.
+            </p>
+          </div>
+          )
+        }
       </section>
 
       <!-- ============ 4. As dores ============ -->
