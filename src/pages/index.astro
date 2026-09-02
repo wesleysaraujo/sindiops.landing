@@ -72,7 +72,7 @@ const jsonLd = {
     {
       '@type': 'WebSite',
       name: 'SindiOps',
-      url: 'https://www.sindiops.com.br',
+      url: 'https://sindiops.com.br',
       inLanguage: 'pt-BR',
     },
     {
@@ -82,6 +82,7 @@ const jsonLd = {
       operatingSystem: 'Web',
       description: descricao,
       inLanguage: 'pt-BR',
+      image: 'https://sindiops.com.br/img/og-sindiops.png',
       featureList: [
         'Consulta à convenção e ao regimento com citação do artigo e da página',
         'Geração de circular, notificação e advertência fundamentadas',
@@ -129,7 +130,33 @@ const jsonLd = {
       content="Da dúvida na convenção à escolha do fornecedor: a resposta vem com o artigo citado, e o orçamento com a linha da proposta que prova cada número."
     />
     <meta property="og:url" content="https://sindiops.com.br/" />
-    <!-- TODO: OG image = print da tela de consulta com a citação aberta (produzir junto com o vídeo) -->
+
+    <!--
+      Imagem do cartão de link. O canal onde os leads chegam é o WhatsApp, e ali
+      link sem imagem ocupa uma tira cinza que ninguém toca — por isso ela mostra
+      o produto, e não a marca sozinha: o trecho da convenção grifado com o
+      carimbo de versão vigente é a coisa que diferencia esta ferramenta de um
+      chat genérico, e é o que precisa aparecer antes de a pessoa clicar.
+
+      1200×630 na proporção, renderizada em 2× para não borrar em tela retina.
+      URL absoluta é obrigatória: crawler de rede social não resolve caminho
+      relativo, e a imagem simplesmente não aparece.
+    -->
+    <meta property="og:image" content="https://sindiops.com.br/img/og-sindiops.png" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta
+      property="og:image:alt"
+      content="SindiOps — trecho da convenção do condomínio grifado, com carimbo de versão vigente"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SindiOps — As decisões do síndico, com a fonte junto" />
+    <meta
+      name="twitter:description"
+      content="Da dúvida na convenção à escolha do fornecedor: a resposta vem com o artigo citado, e o orçamento com a linha da proposta que prova cada valor."
+    />
+    <meta name="twitter:image" content="https://sindiops.com.br/img/og-sindiops.png" />
 
     <!-- Fontes críticas: preload das duas usadas acima da dobra -->
     <link rel="preload" href="/fonts/besley-v22-latin-800.woff2" as="font" type="font/woff2" crossorigin />
