@@ -743,6 +743,30 @@ const jsonLd = {
               <p id="erro-nome" class="mt-1.5 hidden font-bold text-carimbo" role="alert"></p>
             </div>
 
+            <!--
+              Opcional, e o rótulo diz isso antes de a pessoa parar para
+              pensar. Boa parte de quem chega é síndico morador, eleito no
+              próprio prédio: essa pessoa não tem escritório, e um campo
+              obrigatório aqui receberia "não tenho" ou o nome dela repetido —
+              lixo justamente no dado que vai nomear a conta. Quem tem
+              escritório responde em dois segundos e poupa a pergunta na
+              primeira conversa.
+            -->
+            <div>
+              <label for="empresa" class="block font-bold">
+                Escritório ou administradora
+                <span class="font-normal text-grafite">(se houver)</span>
+              </label>
+              <input
+                type="text"
+                id="empresa"
+                name="empresa"
+                autocomplete="organization"
+                maxlength="255"
+                class="mt-1.5 w-full rounded-md border-2 border-grafite/60 bg-white px-4 py-3.5 text-lg"
+              />
+            </div>
+
             <div>
               <label for="whatsapp" class="block font-bold">WhatsApp</label>
               <input

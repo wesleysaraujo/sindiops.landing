@@ -35,6 +35,8 @@ function validar(dados: Record<string, string>): Erros {
 
 type Registro = {
   nome: string;
+  /** Nulo quando a pessoa não representa escritório — o campo é opcional. */
+  empresa: string | null;
   whatsapp: string;
   email: string;
   condominios: string;
@@ -57,6 +59,7 @@ async function enviarAoApp(registro: Registro): Promise<boolean> {
 
   const corpo = JSON.stringify({
     name: registro.nome,
+    company_name: registro.empresa,
     email: registro.email,
     whatsapp: registro.whatsapp,
     condominiums_range: registro.condominios,
@@ -114,6 +117,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   const registro: Registro = {
     nome: dados.nome.trim(),
+    // Vazio vira nulo, e não string vazia: "não informou" e "informou nada"
+    // são a mesma coisa para quem lê depois, e uma delas só suja o banco.
+    empresa: dados.empresa?.trim() || null,
     whatsapp: dados.whatsapp.trim(),
     email: dados.email.trim().toLowerCase(),
     condominios: dados.condominios,
