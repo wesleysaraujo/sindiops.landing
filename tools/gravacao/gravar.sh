@@ -49,8 +49,14 @@ mkdir -p "${PRINTS_DESTINO:-../../../design/prints-produto}"
 cp prints/*.png "${PRINTS_DESTINO:-../../../design/prints-produto}/"
 
 mkdir -p "$DESTINO"
-./editar.sh "$(ls -t saida/video1/*.webm | head -1)" "$DESTINO/demo-notificacao" 19.5 "0.4:22.3:1"
-./editar.sh "$(ls -t saida/video2/*.webm | head -1)" "$DESTINO/demo-orcamento"   17.5 "0.5:20.1:1"
+# O corte do vídeo 1 sai dos marcos do próprio take (ver cortes.py): a espera da
+# consulta varia de 2 a 40 segundos, e número fixo aqui já mandou o pôster para
+# a tela de "Consultando" em vez da gaveta com o artigo.
+V1="$(ls -t saida/video1/*.webm | head -1)"
+read -r INI FIM POSTER < <(python3 cortes.py "$V1" saida/video1/marcos.json)
+./editar.sh "$V1" "$DESTINO/demo-notificacao" "$POSTER" "$INI:$FIM:1"
+
+./editar.sh "$(ls -t saida/video2/*.webm | head -1)" "$DESTINO/demo-orcamento" 17.5 "0.5:20.1:1"
 
 echo
 echo "Instalados em $DESTINO. Confira os pôsteres antes de commitar:"
