@@ -35,6 +35,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
  * código. Roteiro em `app.sindiops/docs/roteiro-videos.md`.
  */
 const temVideoOrcamento = existsSync('public/img/demo-orcamento.mp4');
+const temVideoContrato = existsSync('public/img/demo-contrato.mp4');
 
 const faq = [
   {
@@ -546,24 +547,24 @@ const jsonLd = {
               <dl class="mt-4 space-y-2.5 font-protocolo text-[0.95rem]">
                 <div class="flex items-baseline justify-between gap-4">
                   <dt class="text-grafite">Valor de partida</dt>
-                  <dd class="m-0">R$&nbsp;1.850,00</dd>
+                  <dd class="m-0">R$&nbsp;2.100,00</dd>
                 </div>
                 <div class="flex items-baseline justify-between gap-4">
                   <dt class="text-grafite">IPCA acumulado (12 meses)</dt>
-                  <dd class="m-0"><span class="grifo">4,44%</span></dd>
+                  <dd class="m-0"><span class="grifo">3,81%</span></dd>
                 </div>
                 <div class="flex items-baseline justify-between gap-4 border-t border-fiopapel pt-2.5">
                   <dt class="text-grafite">Valor devido</dt>
-                  <dd class="m-0">R$&nbsp;1.932,20</dd>
+                  <dd class="m-0">R$&nbsp;2.180,06</dd>
                 </div>
                 <div class="flex items-baseline justify-between gap-4">
                   <dt class="text-grafite">Valor cobrado</dt>
-                  <dd class="m-0">R$&nbsp;1.940,00</dd>
+                  <dd class="m-0">R$&nbsp;2.190,00</dd>
                 </div>
               </dl>
 
               <p class="mt-4 border-t border-fiopapel pt-3 font-protocolo text-[1rem] font-bold text-caneta">
-                Cobrança acima em R$&nbsp;7,80
+                Cobrança acima em R$&nbsp;9,94
               </p>
             </div>
 
@@ -593,6 +594,49 @@ const jsonLd = {
             </figcaption>
           </figure>
         </div>
+
+        <!--
+          Como no orçamento: o vídeo vem **depois** da figura, não no lugar
+          dela. A figura é lida em meio segundo e sustenta a seção para quem não
+          dá play, para quem tem `prefers-reduced-motion` e para quem chegou com
+          a rede ruim.
+
+          Os números do vídeo e os da figura são os mesmos (R$ 2.100 corrigidos
+          por IPCA de 3,81%, cobrança de R$ 2.190) porque saem da mesma
+          gravação: divergir a poucos centímetros seria a página se contradizendo
+          na frente de quem está avaliando justamente se confia nela. Quando a
+          série do IBGE mudar o acumulado, os dois se atualizam juntos —
+          `tools/gravacao/gravar.sh` regrava e o corte reescreve a figura.
+        -->
+        {
+          temVideoContrato && (
+          <div class="mx-auto w-full max-w-3xl px-5 pb-14 md:px-8 md:pb-20">
+            <h3 class="font-display text-[1.25rem] font-bold md:text-[1.5rem]">Do prazo ao reajuste conferido</h3>
+            <video
+              class="mt-5 w-full rounded-sm border border-fiopapel"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="/img/demo-contrato-poster.webp"
+              aria-label="Demonstração do SindiOps: o prazo de não renovação com a cláusula que o define, a conferência do reajuste com o valor cobrado pelo fornecedor, e a conta mês a mês apontando uma cobrança de R$ 9,94 acima do devido"
+            >
+              <source src="/img/demo-contrato.webm" type="video/webm" />
+              <source src="/img/demo-contrato.mp4" type="video/mp4" />
+              <img
+                src="/img/demo-contrato-poster.webp"
+                alt="Conferência de reajuste no SindiOps: valor devido de R$ 2.180,06 contra R$ 2.190,00 cobrados, com a conta mês a mês aberta"
+                class="w-full"
+              />
+            </video>
+            <p class="mt-3 text-[0.95rem] text-grafite">
+              O prazo vem com a cláusula que o define. A conta usa a série oficial do Banco Central e abre mês a mês —
+              você refaz no papel na frente do fornecedor.
+            </p>
+          </div>
+          )
+        }
       </section>
 
       <!-- ============ 4. As dores ============ -->

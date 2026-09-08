@@ -25,6 +25,7 @@ uuid() {
 
 export CONDO=$(uuid "App\Models\Condominium::first()->uuid")
 export ORC=$(uuid "App\Models\BudgetRequest::first()->uuid")
+export CONTRATO=$(uuid "App\Models\Contract::first()->uuid")
 export QUOTE=$(uuid "App\Models\Quote::whereHas('supplier', fn(\$q) => \$q->where('name','Impermeasul'))->first()->uuid")
 
 [ -z "$CONDO" ] && { echo "Cenário ausente. Rode: php artisan demo:prepare --fresh"; exit 1; }
@@ -36,10 +37,32 @@ docker compose --project-directory "$APP" exec -T app php artisan tinker --execu
   \$t = App\Models\Tenant::where('slug','demonstracao')->first();
   app(App\Support\TenantContext::class)->set(\$t->id);
   App\Models\Query::withTrashed()->forceDelete();
+
+  // O vídeo 3 confere o reajuste na tela: com uma conferência anterior no
+  // banco, a cena mostraria o resultado antes de alguém pedir.
+  App\Models\ContractAdjustment::query()->forceDelete();
+
+  // Tour e anúncio cobrem a tela com um diálogo, e o clique da cena bate no
+  // overlay em vez do botão — o take morria aqui.
+  \$u = App\Models\User::where('tenant_id', \$t->id)->first();
+  \$u->forceFill(['onboarding_completed_at' => now(), 'tours_seen' => ['dashboard','condominium','queries','contracts','budget-request','quote']])->save();
+
+  foreach (App\Models\Announcement::live()->get() as \$a) {
+    DB::table('announcement_reads')->insertOrIgnore([['announcement_id' => \$a->id, 'user_id' => \$u->id, 'read_at' => now()]]);
+  }
+
+  // A ficha precisa estar conferida: sem isso o contrato 'não avisa' e não há
+  // prazo nem conta para filmar — que é a trava do produto, não um detalhe da
+  // gravação.
+  \$k = App\Models\Contract::first();
+  foreach (\$k->terms as \$termo) {
+    \$termo->forceFill(['confirmed_value' => \$termo->extracted_value, 'is_confirmed' => true, 'confirmed_by' => \$u->id, 'confirmed_at' => now(), 'is_stale' => false])->save();
+  }
 " >/dev/null 2>&1
 
 echo "→ vídeo 1 (consulta)";   node video1.mjs
 echo "→ vídeo 2 (orçamento)";  node video2.mjs
+echo "→ vídeo 3 (contrato)";   node video3.mjs
 
 # Prints em 2x das telas que sustentam o argumento, para peça de marketing.
 # Ficam fora do controle de versão (a pasta `design/` não é repositório): são
@@ -57,6 +80,11 @@ read -r INI FIM POSTER < <(python3 cortes.py "$V1" saida/video1/marcos.json)
 ./editar.sh "$V1" "$DESTINO/demo-notificacao" "$POSTER" "$INI:$FIM:1"
 
 ./editar.sh "$(ls -t saida/video2/*.webm | head -1)" "$DESTINO/demo-orcamento" 17.5 "0.5:20.1:1"
+
+# O vídeo 3 tem uma espera de rede no meio (a série do Banco Central) e a
+# digitação acelerada em 1.5×: os três segmentos pulam a espera sem esconder
+# que ela existe — o corte tira o tempo morto, não o passo.
+./editar.sh "$(ls -t saida/video3/*.webm | head -1)" "$DESTINO/demo-contrato" 17 "1.2:6.2:1" "6.4:12.4:1.5" "13.2:21.8:1"
 
 echo
 echo "Instalados em $DESTINO. Confira os pôsteres antes de commitar:"
