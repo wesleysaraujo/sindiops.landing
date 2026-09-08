@@ -54,6 +54,18 @@ const faq = [
     r: 'Não. A nota é uma fórmula sobre os valores que você confirmou, com os pesos que você definiu — dá para refazer a lápis. O sistema escreve o parecer e aponta o trade-off de cada escolha; a decisão é sua, e o que fica registrado é a sua justificativa, não a sugestão dele.',
   },
   {
+    p: 'E os contratos que já estão em andamento?',
+    r: 'É o caso mais comum, e é onde ele mais serve: você sobe a pasta e, numa tarde, sabe o que vence, quanto custa e o que renova sozinho. O sistema lê cada contrato — com os aditivos, que continuam valendo junto com o original — e monta a ficha: objeto, valor, vigência, aviso prévio, índice de reajuste. Cada campo vem com a cláusula que o sustenta, e você confere um por um.',
+  },
+  {
+    p: 'Ele avisa sozinho antes do contrato renovar?',
+    r: 'Avisa — 60, 30 e 7 dias antes do prazo de não renovação, e 30 dias antes do vencimento e do mês do reajuste. O aviso chega por e-mail e fica guardado dentro do sistema, com a cláusula do prazo junto, então não depende de você abrir a caixa de entrada. E ele só avisa sobre data que você conferiu: enquanto a ficha não estiver confirmada, a tela diz que aquele contrato não está sendo vigiado, em vez de ficar em silêncio.',
+  },
+  {
+    p: 'Como confiro se o reajuste que o fornecedor cobrou está certo?',
+    r: 'O sistema busca o índice do contrato na série oficial do Banco Central, compõe mês a mês e mostra o valor de partida, o percentual acumulado, o que era devido e o que foi cobrado. É aritmética, não opinião: você refaz a conta no papel na frente do fornecedor. Se o índice ainda não tiver sido publicado para o período, ele recusa a conferência em vez de estimar.',
+  },
+  {
     p: 'Preciso digitalizar os documentos?',
     r: 'Não. PDF escaneado funciona — o sistema faz o reconhecimento de texto. Isso vale para a convenção e para a proposta que o fornecedor mandou fotografada. Documento escaneado vem marcado na tela, para você saber que a transcrição pode ter imprecisão.',
   },
@@ -80,7 +92,7 @@ const faq = [
 // a página acabou descrevendo só a convenção depois que o produto cresceu.
 // O `<title>` não usa esta: lá o limite é de ~60 caracteres.
 const descricao =
-  'Pergunte sobre a convenção e receba o artigo citado. Compare orçamentos e receba a linha da proposta que prova cada número. Toda decisão sai com a fonte junto, pronta para o conselho e a assembleia.';
+  'Pergunte sobre a convenção e receba o artigo citado. Compare orçamentos e receba a linha da proposta que prova cada número. Acompanhe os contratos do prédio e confira o reajuste antes de pagar. Toda decisão sai com a fonte junto, pronta para o conselho e a assembleia.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -105,6 +117,10 @@ const jsonLd = {
         'Processo de orçamento com critérios ponderados e edital em PDF',
         'Leitura das propostas com o trecho que comprova cada valor',
         'Comparativo, parecer e registro da decisão de contratação',
+        'Ficha do contrato conferida, com a cláusula que sustenta cada campo',
+        'Aviso antes da janela de não renovação, do vencimento e do reajuste',
+        'Conferência do reajuste contra o índice oficial do Banco Central',
+        'Carta de não renovação com as cláusulas que sustentam a data',
       ],
     },
     {
@@ -241,8 +257,8 @@ const jsonLd = {
           </h1>
           <p class="mt-5 max-w-prose text-lg">
             Pergunte sobre a convenção e receba o artigo, o parágrafo e a página. Compare orçamentos e receba a linha da
-            proposta que prova cada número. Você confere antes de usar — e leva a fundamentação junto para o conselho e
-            a assembleia.
+            proposta que prova cada número. Acompanhe os contratos do prédio e saiba do prazo antes de ele passar. Você
+            confere antes de usar — e leva a fundamentação junto para o conselho e a assembleia.
           </p>
           <div class="mt-8">
             <a
@@ -483,6 +499,102 @@ const jsonLd = {
         }
       </section>
 
+      <!-- ============ 3.5 Terceira capacidade: o contrato ============ -->
+      <!--
+        Fica **depois** do orçamento porque é a continuação dele na vida real: o
+        síndico contrata e, no mês seguinte, o dinheiro começa a sair. A figura
+        repete a assinatura da página — o fio que liga a afirmação à cláusula —,
+        agora entre a conta do reajuste e o texto do contrato.
+
+        Os números batem com o cenário do `demo:prepare` (R$ 1.850 corrigidos
+        por IPCA de 4,44%, cobrança de R$ 1.940). A página não pode divergir do
+        produto a um clique de distância, na frente de quem está avaliando
+        justamente se confia nela.
+      -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto grid w-full max-w-6xl gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14">
+          <div class="max-w-xl">
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">O dinheiro que sai todo mês</p>
+            <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+              Os contratos que você herdou, e o prazo que ninguém viu passar
+            </h2>
+            <p class="mt-5 max-w-prose">
+              Elevador, limpeza, jardim, dedetização, seguro. Você não escolheu nenhum deles, e todos saem da conta do
+              condomínio. O contrato do elevador renova sozinho porque o aviso tinha que sair 60 dias antes; a fatura da
+              limpeza sobe 12% em março e o fornecedor diz que é o índice.
+            </p>
+            <p class="mt-4 max-w-prose">
+              Suba o contrato — e os aditivos, que continuam valendo junto com o original. O sistema lê e monta a ficha:
+              objeto, valor, vigência, aviso prévio, índice, multa, garantias. <strong>Cada campo com a cláusula que o
+              sustenta</strong>, para você conferir um por um.
+            </p>
+            <p class="mt-4 max-w-prose">
+              Daí em diante ele avisa antes da janela fechar, confere o reajuste contra o índice oficial e escreve a
+              carta de não renovação com as cláusulas que sustentam a data. <strong>Ele só avisa sobre o que você
+              conferiu</strong> — enquanto a ficha não estiver confirmada, a tela diz que aquele contrato não está
+              sendo vigiado, em vez de ficar em silêncio.
+            </p>
+          </div>
+
+          <figure class="m-0 min-w-0" aria-label="Exemplo de conferência de reajuste: a diferença cobrada a mais aponta, por um fio, a cláusula do contrato que define o índice">
+            <div class="rounded-sm border border-fiopapel bg-white p-5 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6">
+              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+                <span class="uppercase tracking-wide">Manutenção de elevadores</span>
+                <span>reajuste de março</span>
+              </div>
+
+              <dl class="mt-4 space-y-2.5 font-protocolo text-[0.95rem]">
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-grafite">Valor de partida</dt>
+                  <dd class="m-0">R$&nbsp;1.850,00</dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-grafite">IPCA acumulado (12 meses)</dt>
+                  <dd class="m-0"><span class="grifo">4,44%</span></dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4 border-t border-fiopapel pt-2.5">
+                  <dt class="text-grafite">Valor devido</dt>
+                  <dd class="m-0">R$&nbsp;1.932,20</dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-grafite">Valor cobrado</dt>
+                  <dd class="m-0">R$&nbsp;1.940,00</dd>
+                </div>
+              </dl>
+
+              <p class="mt-4 border-t border-fiopapel pt-3 font-protocolo text-[1rem] font-bold text-caneta">
+                Cobrança acima em R$&nbsp;7,80
+              </p>
+            </div>
+
+            <!-- O fio -->
+            <div class="ml-14 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
+              <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+              <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+            </div>
+
+            <!--
+              `pb-20`: a cláusula aqui tem três linhas e o carimbo é absoluto no
+              canto — com o `pb-14` da figura do herói, ele cobria a última
+              linha do texto que a figura existe para mostrar.
+            -->
+            <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 pb-20 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6 md:pb-20">
+              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+                <span class="uppercase tracking-wide">Contrato · cláusula terceira</span>
+                <span>fls. 4</span>
+              </div>
+              <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
+                <strong>3.2</strong> — <span class="grifo grifo-animado">O valor mensal será reajustado anualmente pela
+                variação acumulada do IPCA/IBGE dos últimos 12 (doze) meses, no mês de março.</span>
+              </p>
+              <span class="carimbo absolute right-4 bottom-4 px-3 py-1.5 text-[0.78rem]">
+                conferido<br />por você
+              </span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       <!-- ============ 4. As dores ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
@@ -514,6 +626,24 @@ const jsonLd = {
           </article>
 
           <article>
+            <h3 class="text-xl font-bold">O contrato que renovou sozinho por mais um ano</h3>
+            <p class="mt-2.5 max-w-prose">
+              O prazo para avisar era 60 dias antes, ninguém lembrou, e o elevador está preso ao mesmo fornecedor até
+              2028. Aqui o sistema avisa com 60, 30 e 7 dias de antecedência — com a cláusula do prazo junto — e a
+              carta de não renovação sai da mesma tela do aviso.
+            </p>
+          </article>
+
+          <article>
+            <h3 class="text-xl font-bold">“Por que essa conta subiu 12%?”</h3>
+            <p class="mt-2.5 max-w-prose">
+              O fornecedor diz que é o índice. Você confere: o sistema busca a série oficial do Banco Central, compõe
+              mês a mês e mostra o que era devido ao lado do que foi cobrado. A conta você refaz no papel na frente
+              dele.
+            </p>
+          </article>
+
+          <article>
             <h3 class="text-xl font-bold">Seus 12 prédios, uma conta só</h3>
             <p class="mt-2.5 max-w-prose">
               Cada condomínio com seus próprios documentos e seu próprio histórico. Seus fornecedores cadastrados uma
@@ -532,10 +662,15 @@ const jsonLd = {
       -->
       <section class="mx-auto w-full max-w-5xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
-          Três passos, dos dois lados
+          Três passos, em cada frente
         </h2>
 
-        <div class="mt-10 grid gap-12 md:grid-cols-2 md:gap-10">
+        <!--
+          Três colunas só a partir de `lg`: em tablet, três listas numeradas
+          lado a lado quebram cada linha em duas palavras e a numeração deixa de
+          guiar a leitura, que é a única coisa que ela faz aqui.
+        -->
+        <div class="mt-10 grid gap-12 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
           <div>
             <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Documento</p>
             <ol class="mt-5 space-y-7">
@@ -599,6 +734,41 @@ const jsonLd = {
                   <h3 class="text-lg font-bold">Decida e registre</h3>
                   <p class="mt-1.5">
                     Nota, parecer e trade-off de cada escolha. Você contrata e escreve por quê — e isso fica.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Contrato</p>
+            <ol class="mt-5 space-y-7">
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">1.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Suba o contrato</h3>
+                  <p class="mt-1.5">
+                    Com os aditivos: eles valem junto com o original, não no lugar dele. O sistema lê e propõe a ficha.
+                  </p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">2.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Confira a ficha</h3>
+                  <p class="mt-1.5">
+                    Valor, vigência, aviso prévio, índice — cada campo com a cláusula ao lado. Só o que você confirmar
+                    passa a valer.
+                  </p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.5rem_1fr] gap-3">
+                <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">3.</span>
+                <div>
+                  <h3 class="text-lg font-bold">Deixe o prazo com ele</h3>
+                  <p class="mt-1.5">
+                    Ele avisa antes da janela fechar, confere o reajuste cobrado e escreve a carta de não renovação
+                    quando você decidir sair.
                   </p>
                 </div>
               </li>

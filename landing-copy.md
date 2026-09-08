@@ -1,7 +1,13 @@
 # Copy da Landing Page
 
-> Substitua `{{PRODUTO}}` pelo nome escolhido. Tudo abaixo está pronto para colar.
-> Regra geral: nada de menu, nada de página "sobre", nada de preço. Uma página, uma ação.
+> **Este arquivo é o rascunho que originou a v1, mantido como histórico.** A
+> copy que está no ar é a de [`src/pages/index.astro`](src/pages/index.astro) —
+> ela evoluiu com o produto e hoje comunica as **três** capacidades (convenção,
+> orçamento e contratos), enquanto o texto abaixo descreve só a primeira.
+> Ao escrever peça nova, leia a página; ao mudar a copy, mude a página.
+>
+> Regra geral que continua valendo: nada de menu, nada de página "sobre", nada
+> de preço. Uma página, uma ação.
 
 ---
 
