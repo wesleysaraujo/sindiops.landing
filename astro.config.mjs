@@ -10,7 +10,12 @@ import tailwindcss from '@tailwindcss/vite';
 // emite um servidor `dist/server/entry.mjs` que a plataforma não sabe iniciar
 // — o deploy sobe e responde 404 até nos arquivos estáticos.
 export default defineConfig({
-  site: 'https://sindiops.com.br',
+  // **Com `www`, porque é esse o host que a Vercel serve.** O apex responde
+  // 308 para cá, e enquanto `site` apontava para ele o canonical de toda
+  // página declarava uma URL que redireciona — o Google descarta a indicação
+  // e escolhe a canônica sozinho. Trocar o host aqui move junto o canonical,
+  // o og:url e o sitemap, que é o ponto de existir uma constante só.
+  site: 'https://www.sindiops.com.br',
   output: 'static',
   // O sitemap sai das rotas no build, e não de um arquivo em `public/`.
   // Escrito à mão ele envelhece calado: as páginas de termos e privacidade

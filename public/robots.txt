@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /waitlist
 
-Sitemap: https://sindiops.com.br/sitemap-index.xml
+Sitemap: https://www.sindiops.com.br/sitemap-index.xml
