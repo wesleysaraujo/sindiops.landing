@@ -21,10 +21,33 @@ interface Props {
   descricao: string;
   caminho: string;
   vigenteDesde: string;
+  /** A mesma data de `vigenteDesde`, em ISO — é o formato que máquina lê. */
+  vigenteDesdeISO: string;
   versao: string;
 }
 
-const { titulo, descricao, caminho, vigenteDesde, versao } = Astro.props;
+const { titulo, descricao, caminho, vigenteDesde, vigenteDesdeISO, versao } = Astro.props;
+
+/**
+ * Documento legal com data e versão declaradas para quem lê por máquina.
+ *
+ * A página já diz "documento v1.0, vigente desde 2 de setembro de 2026" em
+ * português, mas isso é texto: um buscador — ou um assistente que responde
+ * citando fontes — não deduz dali qual redação está valendo. Sem a data, uma
+ * versão antiga em cache é indistinguível da atual.
+ */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: `${titulo} — SindiOps`,
+  description: descricao,
+  url: `https://www.sindiops.com.br${caminho}`,
+  inLanguage: 'pt-BR',
+  datePublished: vigenteDesdeISO,
+  dateModified: vigenteDesdeISO,
+  version: versao,
+  publisher: { '@type': 'Organization', name: 'SindiOps', url: 'https://www.sindiops.com.br' },
+};
 ---
 
 <!doctype html>
@@ -64,6 +87,8 @@ const { titulo, descricao, caminho, vigenteDesde, versao } = Astro.props;
     <meta name="twitter:title" content={`${titulo} — SindiOps`} />
     <meta name="twitter:description" content={descricao} />
     <meta name="twitter:image" content="https://www.sindiops.com.br/img/og-sindiops.png" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <link rel="preload" href="/fonts/besley-v22-latin-800.woff2" as="font" type="font/woff2" crossorigin />
     <link

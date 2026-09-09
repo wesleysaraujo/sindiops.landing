@@ -11,6 +11,9 @@ const controlador = await obterControlador();
 
 const VERSAO = '1.0';
 const VIGENTE_DESDE = '2 de setembro de 2026';
+// A mesma data, para quem lê por máquina. Duas constantes lado a lado
+// porque divergir aqui é imediatamente visível na revisão.
+const VIGENTE_DESDE_ISO = '2026-09-02';
 
 const indisponivel = 'não informado — peça a identificação completa em contato@sindiops.com.br';
 
@@ -73,6 +76,7 @@ const operadores = [
   caminho="/privacidade"
   versao={`v${VERSAO}`}
   vigenteDesde={VIGENTE_DESDE}
+  vigenteDesdeISO={VIGENTE_DESDE_ISO}
 >
   <p class="destaque">
     Esta política descreve o que fazemos com dados pessoais em duas situações diferentes: quando <strong>você</strong>

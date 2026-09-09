@@ -98,17 +98,48 @@ const descricao =
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
+    /*
+     * A empresa como entidade, e não só o site e o produto.
+     *
+     * Sem isto, "SindiOps" é uma palavra que aparece numa página; com isto, é
+     * algo que tem nome, endereço na web, contato e perfil — que é o que
+     * permite a um buscador (ou a um assistente que responde citando fontes)
+     * ligar as menções soltas a uma mesma coisa.
+     *
+     * Sem CNPJ e sem razão social aqui de propósito: esses dados moram no app
+     * (`config/sindiops.php`) e chegam às páginas legais por requisição. Uma
+     * cópia congelada no build divergiria na primeira mudança, e o lugar onde
+     * ela divergiria é justamente o dado que identifica quem responde
+     * juridicamente.
+     */
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.sindiops.com.br/#organizacao',
+      name: 'SindiOps',
+      url: 'https://www.sindiops.com.br',
+      // SVG porque é a única arte da marca isolada que existe hoje. Se um dia
+      // houver um PNG do logo, ele é melhor: parte dos consumidores de dados
+      // estruturados ainda não lê vetor.
+      logo: 'https://www.sindiops.com.br/favicon.svg',
+      image: 'https://www.sindiops.com.br/img/og-sindiops.png',
+      description: descricao,
+      email: 'contato@sindiops.com.br',
+      areaServed: 'BR',
+      sameAs: ['https://www.instagram.com/sindiopsia'],
+    },
     {
       '@type': 'WebSite',
       name: 'SindiOps',
       url: 'https://www.sindiops.com.br',
       inLanguage: 'pt-BR',
+      publisher: { '@id': 'https://www.sindiops.com.br/#organizacao' },
     },
     {
       '@type': 'SoftwareApplication',
       name: 'SindiOps',
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
+      publisher: { '@id': 'https://www.sindiops.com.br/#organizacao' },
       description: descricao,
       inLanguage: 'pt-BR',
       image: 'https://www.sindiops.com.br/img/og-sindiops.png',

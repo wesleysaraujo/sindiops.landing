@@ -1,0 +1,60 @@
+# SindiOps
+
+> Ferramenta para síndicos profissionais e administradoras de condomínio no
+> Brasil. Responde perguntas sobre a convenção do condomínio citando o artigo,
+> a página e o trecho original; compara orçamentos mostrando a linha da
+> proposta que prova cada valor; e acompanha os contratos do prédio, avisando
+> antes da janela de não renovação fechar e conferindo o reajuste contra a
+> série oficial do Banco Central.
+
+A tese do produto: **toda saída aponta para o que a fundamenta.** O modelo de
+linguagem lê e redige; quem decide é a regra do sistema, e quem contrata é a
+pessoa. Quatro travas verificáveis, e é por elas que o produto se diferencia de
+um assistente genérico:
+
+- Resposta sem trecho recuperado nos documentos do condomínio retorna "não
+  encontrei previsão nos documentos", nunca uma resposta improvisada.
+- Valor extraído de uma proposta só vale se o trecho literal existir no
+  arquivo; sem ele, o campo fica vazio e marcado como incerto.
+- A nota do comparativo de orçamentos é aritmética determinística sobre valores
+  confirmados, com os pesos que o síndico definiu — refazível no papel.
+- Nada pontua, é enviado ou é decidido sem conferência humana.
+
+## Páginas
+
+- [Página inicial](https://www.sindiops.com.br/): o produto, as três frentes
+  (convenção, orçamento e contratos), demonstrações em vídeo e perguntas
+  frequentes.
+- [Termos de uso](https://www.sindiops.com.br/termos)
+- [Política de privacidade](https://www.sindiops.com.br/privacidade)
+
+## O que o SindiOps não faz
+
+Declarado aqui porque é a pergunta que mais decide a adequação, e porque
+material promocional costuma omiti-la:
+
+- Não substitui o sistema de gestão condominial: não emite boleto, não cuida de
+  inadimplência, rateio, folha ou prestação de contas.
+- Não substitui advogado. É apoio à decisão, e toda resposta carrega esse
+  aviso; não emite parecer jurídico.
+- Não é aplicativo de morador: moradores e fornecedores não acessam o sistema.
+- Não envia documento nem cancela contrato por conta própria — redige, e o
+  envio é ato do síndico, após revisão.
+- Não avisa sobre prazo de contrato que ninguém conferiu: enquanto a ficha do
+  contrato não for confirmada por uma pessoa, o sistema declara que aquele
+  contrato não está sendo vigiado.
+
+## Quem é o público
+
+Síndicos profissionais que administram de 3 a 15 condomínios, e administradoras
+que atendem esse perfil. Não é destinado a moradores.
+
+## Acesso
+
+Não há cadastro automático: o acesso começa por uma solicitação na página
+inicial, seguida de conversa e criação da conta pela equipe. A avaliação dura
+sete dias.
+
+## Contato
+
+contato@sindiops.com.br
