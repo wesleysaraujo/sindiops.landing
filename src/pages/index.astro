@@ -64,7 +64,7 @@ const faq = [
   },
   {
     p: 'Como confiro se o reajuste que o fornecedor cobrou está certo?',
-    r: 'O sistema busca o índice do contrato na série oficial do Banco Central, compõe mês a mês e mostra o valor de partida, o percentual acumulado, o que era devido e o que foi cobrado. É aritmética, não opinião: você refaz a conta no papel na frente do fornecedor. Se o índice ainda não tiver sido publicado para o período, ele recusa a conferência em vez de estimar.',
+    r: 'O sistema busca o índice do contrato — IPCA, IGP-M, INPC, o que estiver na cláusula — na série oficial do Banco Central, compõe mês a mês e mostra o valor de partida, o percentual acumulado, o que era devido e o que foi cobrado. É aritmética, não opinião: você refaz a conta no papel na frente do fornecedor. Se o índice ainda não tiver sido publicado para o período, ele recusa a conferência em vez de estimar.',
   },
   {
     p: 'Preciso digitalizar os documentos?',
@@ -148,7 +148,14 @@ const jsonLd = {
     -->
     {gtmAtivo && <script is:inline set:html={gtmSnippet} />}
 
-    <title>SindiOps — As decisões do síndico, com a fonte junto</title>
+    <!--
+      O `<title>` é o maior peso da busca e o texto que a pessoa lê na aba.
+      Ele nomeia as três frentes porque quem procura o produto procura por
+      uma delas — "convenção de condomínio", "orçamento", "contrato" — e não
+      pela tese que as une. O corte é ~60 caracteres antes das reticências no
+      resultado, então a marca vem primeiro e o resto qualifica.
+    -->
+    <title>SindiOps — Convenção, orçamentos e contratos do condomínio</title>
     <meta name="description" content={descricao} />
     <link rel="canonical" href="https://sindiops.com.br/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -157,10 +164,10 @@ const jsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="SindiOps" />
-    <meta property="og:title" content="SindiOps — As decisões do síndico, com a fonte junto" />
+    <meta property="og:title" content="SindiOps — Convenção, orçamentos e contratos do condomínio" />
     <meta
       property="og:description"
-      content="Da dúvida na convenção à escolha do fornecedor: a resposta vem com o artigo citado, e o orçamento com a linha da proposta que prova cada número."
+      content="Convenção, orçamento e contrato do condomínio no mesmo lugar: a resposta vem com o artigo citado, a proposta com a linha que prova o valor, e o contrato avisa antes de renovar sozinho."
     />
     <meta property="og:url" content="https://sindiops.com.br/" />
 
@@ -184,10 +191,10 @@ const jsonLd = {
     />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SindiOps — As decisões do síndico, com a fonte junto" />
+    <meta name="twitter:title" content="SindiOps — Convenção, orçamentos e contratos do condomínio" />
     <meta
       name="twitter:description"
-      content="Da dúvida na convenção à escolha do fornecedor: a resposta vem com o artigo citado, e o orçamento com a linha da proposta que prova cada valor."
+      content="Convenção, orçamento e contrato do condomínio no mesmo lugar: a resposta vem com o artigo citado, a proposta com a linha que prova o valor, e o contrato avisa antes de renovar sozinho."
     />
     <meta name="twitter:image" content="https://sindiops.com.br/img/og-sindiops.png" />
 
@@ -517,7 +524,7 @@ const jsonLd = {
           <div class="max-w-xl">
             <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">O dinheiro que sai todo mês</p>
             <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
-              Os contratos que você herdou, e o prazo que ninguém viu passar
+              Contratos do condomínio: os que você herdou, e o prazo que ninguém viu passar
             </h2>
             <p class="mt-5 max-w-prose">
               Elevador, limpeza, jardim, dedetização, seguro. Você não escolheu nenhum deles, e todos saem da conta do
