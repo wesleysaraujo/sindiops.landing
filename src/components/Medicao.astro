@@ -1,0 +1,66 @@
+---
+/**
+ * O Google Tag Manager, com carregamento adiado.
+ *
+ * **Vive num componente porque agora são várias páginas.** O snippet nasceu
+ * escrito à mão no `index.astro`, e quando os guias apareceram eles ficaram sem
+ * medição nenhuma — não por decisão, por herança: os layouts foram copiados da
+ * casca das páginas legais, onde a ausência de rastreador é deliberada.
+ *
+ * Guia é o oposto de documento legal. Ele existe para atrair visita da busca, e
+ * sem medir não há como saber qual guia traz gente, nem se essa gente vira
+ * solicitação de acesso — que é exatamente a pergunta que a pauta de conteúdo
+ * manda responder.
+ *
+ * **As páginas legais continuam de fora**, e por isso este componente não entra
+ * lá: quem abre a política de privacidade está exercendo o direito de saber o
+ * que se faz com o dado dele, e medir esse clique seria a contradição mais
+ * barata do produto. A própria política declara isso por escrito.
+ *
+ * O carregamento espera a primeira interação ou o navegador ficar ocioso: o
+ * container e as tags somam centenas de KB e seguravam a thread principal por
+ * mais de meio segundo no celular, no momento em que a página ainda está sendo
+ * pintada. Medir a visita não pode custar a visita.
+ */
+const gtmId = import.meta.env.PUBLIC_GTM_ID ?? 'GTM-MJZTZVNC';
+const ativo = import.meta.env.PROD && Boolean(gtmId);
+
+// Vai como string e entra por `set:html`: dentro de uma expressão JSX, as
+// chaves do próprio JavaScript seriam lidas como expressão Astro e o script
+// sairia quebrado no HTML.
+const snippet = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});
+var carregado=false;
+function carregar(){if(carregado)return;carregado=true;
+var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+f.parentNode.insertBefore(j,f);}
+['scroll','pointerdown','keydown','touchstart'].forEach(function(e){
+w.addEventListener(e,carregar,{once:true,passive:true});});
+if('requestIdleCallback' in w){w.requestIdleCallback(carregar,{timeout:5000});}
+else{w.setTimeout(carregar,5000);}
+})(window,document,'script','dataLayer','${gtmId}');`;
+
+interface Props {
+  /** `cabeca` no `<head>`; `corpo` como primeiro nó do `<body>`. */
+  posicao: 'cabeca' | 'corpo';
+}
+
+const { posicao } = Astro.props;
+---
+
+{ativo && posicao === 'cabeca' && <script is:inline set:html={snippet} />}
+
+{
+  ativo && posicao === 'corpo' && (
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        title="Google Tag Manager"
+      />
+    </noscript>
+  )
+}

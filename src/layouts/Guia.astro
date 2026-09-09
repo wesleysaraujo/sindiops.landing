@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Marca from '../components/Marca.astro';
+import Medicao from '../components/Medicao.astro';
 import { dataPorExtenso, type Guia } from '../lib/guias';
 
 /**
@@ -51,10 +52,14 @@ const jsonLd = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <Medicao posicao="cabeca" />
+
     <title>{titulo} — SindiOps</title>
     <meta name="description" content={resumo} />
     <link rel="canonical" href={url} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:type" content="article" />
     <meta property="og:locale" content="pt_BR" />
@@ -88,6 +93,8 @@ const jsonLd = {
   </head>
 
   <body class="bg-papel text-tinta font-corpo antialiased">
+    <Medicao posicao="corpo" />
+
     <header class="border-b border-fiopapel">
       <div class="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-5 md:px-8">
         <a href="/" aria-label="SindiOps, página inicial"><Marca /></a>

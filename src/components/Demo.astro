@@ -1,0 +1,172 @@
+---
+import { existsSync, statSync } from 'node:fs';
+
+/**
+ * Um vídeo de demonstração do produto.
+ *
+ * **Nada é baixado até alguém pedir.** Antes, os três vídeos tinham `autoplay`,
+ * e `autoplay` anula o `preload="metadata"`: para começar a tocar, o navegador
+ * precisa baixar o arquivo — inclusive o das seções que a pessoa talvez nunca
+ * role até ver. No celular isso somava alguns megabytes antes do primeiro
+ * parágrafo ser lido.
+ *
+ * Agora o `<source>` nasce com `data-src`, que o navegador ignora, e o script
+ * decide quando promover para `src`:
+ *
+ * - **No computador**, quando a seção entra na tela. O efeito visual é o mesmo
+ *   de antes, e quem não desce até o orçamento não paga por ele.
+ * - **No celular**, só no toque. Ali a banda é do usuário e a tela é pequena
+ *   demais para um vídeo valer a espera; quem quiser ver, pede.
+ *
+ * Sem JavaScript, sobra o pôster com a legenda — que é o que a página precisa
+ * para se sustentar de qualquer forma.
+ */
+interface Props {
+  /** Nome do arquivo sem extensão, em `public/img/`. */
+  nome: string;
+  /** Descrição do vídeo para quem não o enxerga. */
+  descricao: string;
+  /** Texto alternativo do pôster. */
+  alt: string;
+  class?: string;
+}
+
+const { nome, descricao, alt, class: classe = '' } = Astro.props;
+
+const caminho = (ext: string) => `/img/${nome}.${ext}`;
+const arquivo = (ext: string) => `public/img/${nome}.${ext}`;
+
+/**
+ * A ordem dos `<source>` decide o download: o navegador toca o **primeiro**
+ * formato que suporta, e não o menor. Como dois dos webm gravados saíram
+ * maiores que o mp4 equivalente, ordenar pelo tamanho no build evita servir o
+ * arquivo pior por causa de uma linha escrita fora de ordem — e a correção
+ * acontece sozinha quando alguém regravar.
+ */
+const formatos = (
+  [
+    { ext: 'webm', tipo: 'video/webm' },
+    { ext: 'mp4', tipo: 'video/mp4' },
+  ] as const
+)
+  .filter(({ ext }) => existsSync(arquivo(ext)))
+  .map((formato) => ({ ...formato, bytes: statSync(arquivo(formato.ext)).size }))
+  .sort((a, b) => a.bytes - b.bytes);
+
+const temVideo = formatos.length > 0;
+
+// `-poster.webp`, com hífen: é como os arquivos foram gravados. Com o ponto, a
+// URL não resolve e o vídeo mostra um retângulo cinza no lugar do primeiro
+// quadro — o pôster é o que sustenta a seção antes de alguém tocar em play.
+const poster = `/img/${nome}-poster.webp`;
+---
+
+{
+  temVideo && (
+    <figure class:list={['relative', classe]} data-demo>
+      <video
+        class="w-full rounded-sm border border-fiopapel"
+        muted
+        loop
+        playsinline
+        preload="none"
+        poster={poster}
+        aria-label={descricao}
+      >
+        {formatos.map((formato) => (
+          <source data-src={caminho(formato.ext)} type={formato.tipo} />
+        ))}
+        <img src={poster} alt={alt} class="w-full" />
+      </video>
+
+      {/*
+        O botão cobre o vídeo inteiro: no celular o alvo de toque é a tela toda,
+        e não um círculo de 48 px no meio dela. Ele some assim que o vídeo
+        começa — daí `hidden` no lugar de opacidade, para não continuar
+        interceptando o toque.
+      */}
+      <button
+        type="button"
+        class="absolute inset-0 flex items-center justify-center bg-tinta/10 transition-colors hover:bg-tinta/0"
+        data-demo-play
+        aria-label={`Reproduzir demonstração: ${descricao}`}
+      >
+        <span class="flex items-center gap-2 rounded-full bg-caneta px-5 py-3 font-bold text-papel shadow-[0_2px_0_0_rgba(0,0,0,0.25)]">
+          <svg viewBox="0 0 24 24" class="size-4 fill-current" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          Ver funcionando
+        </span>
+      </button>
+    </figure>
+  )
+}
+
+<script>
+  /**
+   * Promove os `data-src` para `src` e toca. Chamado uma vez por vídeo: depois
+   * disso o navegador já tem o arquivo, e o botão sai da frente.
+   */
+  function tocar(figura: HTMLElement) {
+    const video = figura.querySelector('video');
+    const botao = figura.querySelector<HTMLElement>('[data-demo-play]');
+
+    if (!video || video.dataset.carregado === 'sim') return;
+
+    video.dataset.carregado = 'sim';
+
+    figura.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((source) => {
+      source.src = source.dataset.src ?? '';
+    });
+
+    video.load();
+    // `catch` silencioso: navegador que recusa a reprodução automática deixa o
+    // vídeo carregado com os controles nativos, que é um desfecho aceitável —
+    // pior seria um erro no console e um pôster que não reage.
+    video.play().catch(() => {
+      video.controls = true;
+    });
+
+    if (botao) botao.hidden = true;
+  }
+
+  const figuras = document.querySelectorAll<HTMLElement>('[data-demo]');
+
+  // Telas grandes mantêm o comportamento antigo: o vídeo começa quando a seção
+  // aparece. `matchMedia` e não largura fixa porque quem gira o aparelho não
+  // recarrega a página.
+  const telaGrande = window.matchMedia('(min-width: 768px)');
+  const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // `saveData` é o pedido explícito de quem está economizando dados. Ignorá-lo
+  // seria gastar a franquia de quem avisou que não quer gastá-la.
+  const economizandoDados =
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+
+  const podeTocarSozinho = telaGrande.matches && !movimentoReduzido.matches && !economizandoDados;
+
+  figuras.forEach((figura) => {
+    const botao = figura.querySelector<HTMLElement>('[data-demo-play]');
+
+    botao?.addEventListener('click', () => tocar(figura));
+
+    if (!podeTocarSozinho) return;
+
+    // No desktop o botão é redundante: o vídeo vai começar sozinho.
+    if (botao) botao.hidden = true;
+
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        entradas.forEach((entrada) => {
+          if (!entrada.isIntersecting) return;
+          tocar(figura);
+          observador.unobserve(entrada.target);
+        });
+      },
+      // Começa um pouco antes de entrar na tela, para o primeiro quadro já
+      // estar pronto quando a seção aparecer.
+      { rootMargin: '200px' },
+    );
+
+    observador.observe(figura);
+  });
+</script>
