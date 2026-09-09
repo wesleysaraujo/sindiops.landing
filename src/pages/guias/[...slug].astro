@@ -1,0 +1,28 @@
+---
+import { render } from 'astro:content';
+import Guia from '../../layouts/Guia.astro';
+import { guiasPublicados } from '../../lib/guias';
+
+/**
+ * Uma rota por guia, gerada no build.
+ *
+ * `guiasPublicados()` é a mesma função do índice: rascunho e guia sem revisão
+ * jurídica não ganham página, então não há URL para vazar por link direto nem
+ * para entrar no sitemap.
+ */
+export async function getStaticPaths() {
+  const guias = await guiasPublicados();
+
+  return guias.map((guia) => ({
+    params: { slug: guia.id },
+    props: { guia },
+  }));
+}
+
+const { guia } = Astro.props;
+const { Content } = await render(guia);
+---
+
+<Guia guia={guia}>
+  <Content />
+</Guia>

@@ -1,0 +1,147 @@
+---
+import '../../styles/global.css';
+import Marca from '../../components/Marca.astro';
+import { agrupadosPorFrente, guiasPublicados } from '../../lib/guias';
+
+/**
+ * O índice dos guias.
+ *
+ * **Temático, e nunca cronológico.** Uma lista de "publicações recentes"
+ * transforma o que é perene em notícia velha: o texto sobre quórum de
+ * destituição vale igual hoje ou daqui a um ano, e uma data de oito meses atrás
+ * no topo da página faria o leitor concluir que ninguém cuida disto — num site
+ * cujo trabalho é convencer um cético a confiar. Por isso também não há
+ * paginação, contador nem promessa de frequência.
+ */
+const guias = await guiasPublicados();
+const grupos = agrupadosPorFrente(guias);
+
+const titulo = 'Guias do síndico — SindiOps';
+const descricao =
+  'Respostas diretas às dúvidas que aparecem na administração de um condomínio: o que a convenção permite, como comparar orçamentos e o que fazer antes de um contrato renovar sozinho.';
+const url = 'https://www.sindiops.com.br/guias';
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={url} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="SindiOps" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content="https://www.sindiops.com.br/img/og-sindiops.png" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descricao} />
+    <meta name="twitter:image" content="https://www.sindiops.com.br/img/og-sindiops.png" />
+
+    <link rel="preload" href="/fonts/besley-v22-latin-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/atkinson-hyperlegible-v12-latin_latin-ext-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+
+  <body class="bg-papel text-tinta font-corpo antialiased">
+    <header class="border-b border-fiopapel">
+      <div class="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-5 md:px-8">
+        <a href="/" aria-label="SindiOps, página inicial"><Marca /></a>
+        <a
+          href="/#acesso"
+          class="text-[0.95rem] underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+        >
+          Acesso antecipado
+        </a>
+      </div>
+    </header>
+
+    <main class="mx-auto w-full max-w-3xl px-5 py-12 md:px-8 md:py-16">
+      <p class="font-protocolo text-[0.78rem] tracking-wide text-grafite uppercase">Guias do síndico</p>
+
+      <h1 class="font-display mt-3 text-[2rem] font-bold text-balance md:text-[2.6rem]">
+        As perguntas que aparecem na administração de um condomínio, respondidas com a fonte junto
+      </h1>
+
+      <p class="mt-5 max-w-prose text-lg text-grafite">
+        Cada guia responde uma pergunta e diz de onde veio a resposta: o artigo da lei, a cláusula típica, ou — o caso
+        mais comum — a parte da convenção do seu prédio que decide o assunto.
+      </p>
+
+      {
+        grupos.length === 0 && (
+          <p class="mt-12 border border-fiopapel bg-white p-6 text-grafite">
+            Os primeiros guias estão em revisão e aparecem aqui em breve.
+          </p>
+        )
+      }
+
+      {
+        grupos.map((grupo) => (
+          <section class="mt-14">
+            <h2 class="font-display text-[1.4rem] font-bold md:text-[1.7rem]">{grupo.titulo}</h2>
+            <p class="mt-2 max-w-prose text-grafite">{grupo.descricao}</p>
+
+            <ul class="mt-6 flex flex-col gap-4">
+              {grupo.guias.map((guia) => (
+                <li class="border border-fiopapel bg-white p-5">
+                  <a href={`/guias/${guia.id}`} class="font-display text-[1.15rem] font-bold text-tinta">
+                    {guia.data.titulo}
+                  </a>
+                  <p class="mt-2 text-[0.98rem] text-grafite">{guia.data.resumo}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+
+      <aside class="mt-16 border-t border-fiopapel pt-6 text-[0.95rem] text-grafite">
+        <p>
+          Os guias são <strong class="text-tinta">apoio à decisão</strong>, não parecer jurídico. A regra que vale no seu
+          prédio é a da sua convenção e do seu regimento.
+        </p>
+      </aside>
+    </main>
+
+    <footer class="border-t border-fiopapel">
+      <div
+        class="mx-auto flex w-full max-w-3xl flex-col gap-4 px-5 py-10 text-[0.95rem] text-grafite md:flex-row md:items-center md:justify-between md:px-8"
+      >
+        <div>
+          <Marca tamanho="padrao" />
+          <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
+        </div>
+
+        <nav class="flex flex-wrap gap-x-5 gap-y-2">
+          <a href="/termos" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            Termos de uso
+          </a>
+          <a href="/privacidade" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            Privacidade
+          </a>
+          <a
+            href="mailto:contato@sindiops.com.br"
+            class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+          >
+            contato@sindiops.com.br
+          </a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

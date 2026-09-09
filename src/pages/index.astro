@@ -1,6 +1,7 @@
 ---
 import { existsSync } from 'node:fs';
 import '../styles/global.css';
+import Marca from '../components/Marca.astro';
 
 // SindiOps — landing de acesso antecipado.
 // Página 100% estática (SEO): o HTML sai pronto do build.
@@ -270,20 +271,7 @@ const jsonLd = {
           traço ocupando de 24 a 87), senão a marca renderizaria pequena dentro
           de uma caixa quase vazia.
         -->
-        <svg viewBox="18 14 76 76" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-9 shrink-0" aria-hidden="true">
-          <path d="M24 20C24 17.7909 25.7909 16 28 16H58L74 32V78C74 80.2091 72.2091 82 70 82H28C25.7909 82 24 80.2091 24 78V20Z" fill="var(--azul-caneta)" />
-          <path d="M58 16V32H74" fill="#ffffff" opacity="0.35" />
-          <rect x="32" y="27" width="16" height="4" rx="1" fill="#ffffff" />
-          <rect x="32" y="35" width="22" height="4" rx="1" fill="#ffffff" />
-          <rect x="32" y="43" width="12" height="4" rx="1" fill="#ffffff" />
-          <circle cx="58" cy="58" r="18" fill="#ffffff" stroke="var(--azul-caneta)" stroke-width="6" />
-          <text x="58" y="58" font-size="20" font-weight="bold" font-family="Georgia, 'Times New Roman', serif" fill="var(--azul-caneta)" text-anchor="middle" dominant-baseline="central">§</text>
-          <path d="M71 71L84 84" stroke="var(--azul-caneta)" stroke-width="7" stroke-linecap="round" />
-        </svg>
-
-        <p class="font-display text-2xl font-extrabold tracking-tight">
-          Sindi<span class="text-caneta">Ops</span><span class="text-caneta">.</span>
-        </p>
+        <Marca tamanho="grande" />
       </div>
     </header>
 
@@ -1033,6 +1021,20 @@ const jsonLd = {
               ))
             }
           </div>
+
+          <!--
+            Os guias entram aqui, e não no rodapé junto de termos e privacidade:
+            ali eles seriam lidos como página institucional. Depois das perguntas
+            frequentes é o ponto em que a pessoa já demonstrou que veio tirar uma
+            dúvida — e o que os guias fazem é continuar respondendo.
+          -->
+          <p class="mt-8 max-w-prose">
+            Dúvida sobre o que a convenção permite, sobre reajuste ou sobre prazo de contrato?
+            <a href="/guias" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+              Veja os guias do síndico
+            </a>
+            — respostas diretas, com a fonte junto.
+          </p>
         </div>
       </section>
 
