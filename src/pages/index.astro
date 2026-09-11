@@ -26,22 +26,13 @@ import Medicao from '../components/Medicao.astro';
 const temVideoOrcamento = existsSync('public/img/demo-orcamento.mp4');
 const temVideoContrato = existsSync('public/img/demo-contrato.mp4');
 
+// As perguntas seguem a ordem das capacidades na página: contrato, orçamento,
+// convenção — e as de conta e acesso fecham. A do ChatGPT continua primeira
+// porque é a objeção que decide se a pessoa lê o resto.
 const faq = [
   {
     p: 'Por que não faço isso no ChatGPT?',
     r: 'Você faz — e recebe um texto bem escrito que ninguém consegue conferir. Aqui a diferença não é o modelo, é onde ele não decide: resposta sem trecho encontrado na sua convenção vira “não encontrei”, valor de proposta cuja linha não existe no arquivo é descartado, a nota de cada orçamento é uma conta que você refaz no papel, e nada pontua sem você confirmar. Num chat genérico, quando o conselho perguntar de onde saiu o número, a resposta é “a inteligência artificial disse”.',
-  },
-  {
-    p: 'Substitui o sistema que eu já uso?',
-    r: 'Não. Se você já tem plataforma de financeiro, boletos e reservas, continue com ela. SindiOps entra na camada que ela não cobre: as decisões que você precisa justificar depois — o que a convenção permite, e qual fornecedor contratar.',
-  },
-  {
-    p: 'Como funciona a parte de orçamentos?',
-    r: 'Você define o que quer contratar e quanto pesa cada critério — preço, prazo, garantia, o que for. O sistema gera o edital e envia aos fornecedores. Quando as propostas chegam, ele lê cada uma e mostra o valor ao lado da linha da proposta que o comprova; você confere item por item. Só então sai a nota, o parecer e a recomendação. Contratar continua sendo ato seu, registrado com a sua justificativa.',
-  },
-  {
-    p: 'A nota do orçamento é o computador escolhendo por mim?',
-    r: 'Não. A nota é uma fórmula sobre os valores que você confirmou, com os pesos que você definiu — dá para refazer a lápis. O sistema escreve o parecer e aponta o trade-off de cada escolha; a decisão é sua, e o que fica registrado é a sua justificativa, não a sugestão dele.',
   },
   {
     p: 'E os contratos que já estão em andamento?',
@@ -56,6 +47,14 @@ const faq = [
     r: 'O sistema busca o índice do contrato — IPCA, IGP-M, INPC, o que estiver na cláusula — na série oficial do Banco Central, compõe mês a mês e mostra o valor de partida, o percentual acumulado, o que era devido e o que foi cobrado. É aritmética, não opinião: você refaz a conta no papel na frente do fornecedor. Se o índice ainda não tiver sido publicado para o período, ele recusa a conferência em vez de estimar.',
   },
   {
+    p: 'Como funciona a parte de orçamentos?',
+    r: 'Você define o que quer contratar e quanto pesa cada critério — preço, prazo, garantia, o que for. O sistema gera o edital e envia aos fornecedores. Quando as propostas chegam, ele lê cada uma e mostra o valor ao lado da linha da proposta que o comprova; você confere item por item. Só então sai a nota, o parecer e a recomendação. Contratar continua sendo ato seu, registrado com a sua justificativa.',
+  },
+  {
+    p: 'A nota do orçamento é o computador escolhendo por mim?',
+    r: 'Não. A nota é uma fórmula sobre os valores que você confirmou, com os pesos que você definiu — dá para refazer a lápis. O sistema escreve o parecer e aponta o trade-off de cada escolha; a decisão é sua, e o que fica registrado é a sua justificativa, não a sugestão dele.',
+  },
+  {
     p: 'Preciso digitalizar os documentos?',
     r: 'Não. PDF escaneado funciona — o sistema faz o reconhecimento de texto. Isso vale para a convenção e para a proposta que o fornecedor mandou fotografada. Documento escaneado vem marcado na tela, para você saber que a transcrição pode ter imprecisão.',
   },
@@ -66,6 +65,10 @@ const faq = [
   {
     p: 'A resposta serve como fundamento para multa ou notificação?',
     r: 'Serve como base para você redigir — sempre com o artigo citado, para conferência. Não é parecer jurídico, e casos que envolvem lei federal ou disputa vêm sinalizados para você consultar o advogado do condomínio.',
+  },
+  {
+    p: 'Substitui o sistema que eu já uso?',
+    r: 'Não. Se você já tem plataforma de financeiro, boletos e reservas, continue com ela. SindiOps entra na camada que ela não cobre: as decisões que você precisa justificar depois — o que a convenção permite, e qual fornecedor contratar.',
   },
   {
     p: 'Administro vários condomínios. Como funciona?',
@@ -82,7 +85,7 @@ const faq = [
 // a página acabou descrevendo só a convenção depois que o produto cresceu.
 // O `<title>` não usa esta: lá o limite é de ~60 caracteres.
 const descricao =
-  'Pergunte sobre a convenção e receba o artigo citado. Compare orçamentos e receba a linha da proposta que prova cada número. Acompanhe os contratos do prédio e confira o reajuste antes de pagar. Toda decisão sai com a fonte junto, pronta para o conselho e a assembleia.';
+  'Acompanhe os contratos do prédio e confira o reajuste antes de pagar. Compare orçamentos com a linha da proposta que prova cada número. Pergunte à convenção e receba o artigo citado. Toda decisão sai com a fonte junto, pronta para o conselho e a assembleia.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -132,16 +135,18 @@ const jsonLd = {
       description: descricao,
       inLanguage: 'pt-BR',
       image: 'https://www.sindiops.com.br/img/og-sindiops.png',
+      // Mesma ordem da página: o que um buscador lista primeiro é o que
+      // descreve o produto para quem nunca ouviu falar dele.
       featureList: [
-        'Consulta à convenção e ao regimento com citação do artigo e da página',
-        'Geração de circular, notificação e advertência fundamentadas',
-        'Processo de orçamento com critérios ponderados e edital em PDF',
-        'Leitura das propostas com o trecho que comprova cada valor',
-        'Comparativo, parecer e registro da decisão de contratação',
         'Ficha do contrato conferida, com a cláusula que sustenta cada campo',
         'Aviso antes da janela de não renovação, do vencimento e do reajuste',
         'Conferência do reajuste contra o índice oficial do Banco Central',
         'Carta de não renovação com as cláusulas que sustentam a data',
+        'Processo de orçamento com critérios ponderados e edital em PDF',
+        'Leitura das propostas com o trecho que comprova cada valor',
+        'Comparativo, parecer e registro da decisão de contratação',
+        'Consulta à convenção e ao regimento com citação do artigo e da página',
+        'Geração de circular, notificação e advertência fundamentadas',
       ],
     },
     {
@@ -171,7 +176,7 @@ const jsonLd = {
       pela tese que as une. O corte é ~60 caracteres antes das reticências no
       resultado, então a marca vem primeiro e o resto qualifica.
     -->
-    <title>SindiOps — Convenção, orçamentos e contratos do condomínio</title>
+    <title>SindiOps — Contratos, orçamentos e convenção do condomínio</title>
     <meta name="description" content={descricao} />
     <link rel="canonical" href="https://www.sindiops.com.br/" />
     <!--
@@ -187,10 +192,10 @@ const jsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="SindiOps" />
-    <meta property="og:title" content="SindiOps — Convenção, orçamentos e contratos do condomínio" />
+    <meta property="og:title" content="SindiOps — Contratos, orçamentos e convenção do condomínio" />
     <meta
       property="og:description"
-      content="Convenção, orçamento e contrato do condomínio no mesmo lugar: a resposta vem com o artigo citado, a proposta com a linha que prova o valor, e o contrato avisa antes de renovar sozinho."
+      content="Contrato, orçamento e convenção do condomínio no mesmo lugar: o contrato avisa antes de renovar sozinho, a proposta vem com a linha que prova o valor, e a resposta com o artigo citado."
     />
     <meta property="og:url" content="https://www.sindiops.com.br/" />
 
@@ -214,10 +219,10 @@ const jsonLd = {
     />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SindiOps — Convenção, orçamentos e contratos do condomínio" />
+    <meta name="twitter:title" content="SindiOps — Contratos, orçamentos e convenção do condomínio" />
     <meta
       name="twitter:description"
-      content="Convenção, orçamento e contrato do condomínio no mesmo lugar: a resposta vem com o artigo citado, a proposta com a linha que prova o valor, e o contrato avisa antes de renovar sozinho."
+      content="Contrato, orçamento e convenção do condomínio no mesmo lugar: o contrato avisa antes de renovar sozinho, a proposta vem com a linha que prova o valor, e a resposta com o artigo citado."
     />
     <meta name="twitter:image" content="https://www.sindiops.com.br/img/og-sindiops.png" />
 
@@ -255,15 +260,33 @@ const jsonLd = {
 
     <main>
       <!-- ============ 1. Herói ============ -->
+      <!--
+        **O herói fala do dinheiro que já está saindo, e não da consulta.**
+        A ordem das capacidades nesta página foi invertida em 11/09/2026, depois
+        de conversas com leads: contrato dói mais porque o dinheiro já sai todo
+        mês e ninguém confere; orçamento vem depois, porque é dinheiro que vai
+        sair; a convenção é a regra que sustenta as duas e, apesar de ser a
+        capacidade mais antiga do produto, é a que menos aparece na conversa de
+        quem ainda não é cliente.
+
+        A figura acompanhou a mudança: quem chega vê a conta do reajuste com a
+        diferença cobrada a mais, e não mais a resposta com o artigo citado — a
+        segunda é mais bonita e explica melhor a tese, mas a primeira é a que
+        faz o síndico se reconhecer em cinco segundos.
+      -->
       <section class="mx-auto grid w-full max-w-6xl gap-12 px-5 pt-10 pb-16 md:px-8 md:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
         <div class="max-w-xl">
           <h1 class="font-display text-[2rem] leading-[1.15] font-extrabold text-balance md:text-[2.9rem]">
-            No condomínio, toda decisão pode ser contestada. <span class="text-caneta">As suas vêm com a fonte.</span>
+            O dinheiro do condomínio sai todo mês. <span class="text-caneta">Você consegue justificar cada saída?</span>
           </h1>
           <p class="mt-5 max-w-prose text-lg">
-            Pergunte sobre a convenção e receba o artigo, o parágrafo e a página. Compare orçamentos e receba a linha da
-            proposta que prova cada número. Acompanhe os contratos do prédio e saiba do prazo antes de ele passar. Você
-            confere antes de usar — e leva a fundamentação junto para o conselho e a assembleia.
+            Os contratos que você herdou renovam sozinhos e reajustam sozinhos. As obras são contratadas no aperto, com
+            três propostas que ninguém consegue comparar. E quando alguém questiona — o conselho, a assembleia, um
+            morador —, a resposta precisa vir com a fonte.
+          </p>
+          <p class="mt-4 max-w-prose text-lg">
+            O SindiOps acompanha o contrato, compara o orçamento e responde pela convenção. <strong>Toda saída aponta
+            o que a fundamenta</strong>: a cláusula, a linha da proposta, o artigo — e você confere antes de usar.
           </p>
           <div class="mt-8">
             <a
@@ -278,90 +301,135 @@ const jsonLd = {
           </div>
         </div>
 
-        <!-- ===== Assinatura: o fio da fonte ===== -->
-        <figure class="m-0" aria-label="Exemplo de consulta: a resposta aponta, por um fio, o trecho da convenção que a fundamenta">
-          <!-- Pergunta -->
-          <div class="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-tinta px-5 py-3.5 text-[1.05rem] text-papel">
-            “Posso multar por obra no sábado?”
-          </div>
+          <figure class="m-0 min-w-0" aria-label="Exemplo de conferência de reajuste: a diferença cobrada a mais aponta, por um fio, a cláusula do contrato que define o índice">
+            <div class="rounded-sm border border-fiopapel bg-white p-5 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6">
+              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+                <span class="uppercase tracking-wide">Manutenção de elevadores</span>
+                <span>reajuste de março</span>
+              </div>
 
-          <!-- Resposta -->
-          <div class="mt-4 max-w-[92%] rounded-2xl rounded-bl-sm border border-fiopapel bg-white px-5 py-4 shadow-sm">
-            <p class="text-[1.05rem]">
-              <strong>Pode.</strong> Obras com ruído são permitidas só de segunda a sexta, das 8h às 17h. Obra no
-              sábado infringe o §1º do Art. 9º da convenção, e a advertência e a multa estão previstas no mesmo
-              parágrafo.
-            </p>
-            <p class="mt-3">
-              <span class="inline-block rounded border-2 border-caneta bg-white px-2.5 py-1 font-protocolo text-[0.9rem] font-bold text-caneta">
-                Art. 9º, §1º&nbsp;·&nbsp;fls. 34
-              </span>
-            </p>
-          </div>
+              <dl class="mt-4 space-y-2.5 font-protocolo text-[0.95rem]">
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-grafite">Valor de partida</dt>
+                  <dd class="m-0">R$&nbsp;2.100,00</dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-grafite">IPCA acumulado (12 meses)</dt>
+                  <dd class="m-0"><span class="grifo">3,81%</span></dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4 border-t border-fiopapel pt-2.5">
+                  <dt class="text-grafite">Valor devido</dt>
+                  <dd class="m-0">R$&nbsp;2.180,06</dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-grafite">Valor cobrado</dt>
+                  <dd class="m-0">R$&nbsp;2.190,00</dd>
+                </div>
+              </dl>
 
-          <!-- O fio -->
-          <div class="ml-14 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
-            <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
-            <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
-          </div>
-
-          <!-- O documento -->
-          <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 pb-14 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6 md:pb-14">
-            <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
-              <span class="uppercase tracking-wide">Convenção do Condomínio</span>
-              <span>fls. 34</span>
+              <p class="mt-4 border-t border-fiopapel pt-3 font-protocolo text-[1rem] font-bold text-caneta">
+                Cobrança acima em R$&nbsp;9,94
+              </p>
             </div>
-            <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
-              <strong>Art. 9º</strong> — As obras que produzam ruído somente poderão ser executadas de segunda-feira a
-              sexta-feira, entre 8h e 17h.
-              <br />
-              <strong>§1º</strong> — <span class="grifo grifo-animado">A execução de obras aos sábados, domingos e
-              feriados sujeitará o condômino à advertência e, em caso de reincidência, à multa prevista nesta
-              convenção.</span>
-            </p>
-            <span class="carimbo absolute right-4 bottom-4 px-3 py-1.5 text-[0.78rem]">
-              versão vigente<br />reg. 14/03/2026
-            </span>
-          </figcaption>
-        </figure>
+
+            <!-- O fio -->
+            <div class="ml-14 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
+              <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+              <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+            </div>
+
+            <!--
+              `pb-20`: a cláusula aqui tem três linhas e o carimbo é absoluto no
+              canto — com o `pb-14` da figura do herói, ele cobria a última
+              linha do texto que a figura existe para mostrar.
+            -->
+            <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 pb-20 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6 md:pb-20">
+              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+                <span class="uppercase tracking-wide">Contrato · cláusula terceira</span>
+                <span>fls. 4</span>
+              </div>
+              <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
+                <strong>3.2</strong> — <span class="grifo grifo-animado">O valor mensal será reajustado anualmente pela
+                variação acumulada do IPCA/IBGE dos últimos 12 (doze) meses, no mês de março.</span>
+              </p>
+              <span class="carimbo absolute right-4 bottom-4 px-3 py-1.5 text-[0.78rem]">
+                conferido<br />por você
+              </span>
+            </figcaption>
+          </figure>
       </section>
 
       <!-- ============ 2. Prova (demonstração) ============ -->
+      <!--
+        O vídeo que abre a página é o do contrato, pelo mesmo motivo do herói: é
+        a capacidade que resolve a dor de quem chega. O da notificação desceu
+        para a seção da convenção, onde continua sendo a prova daquela.
+      -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Veja funcionando</h2>
-          <!--
-            Gravação real do produto, do começo ao fim: pergunta → resposta com
-            artigo citado → notificação para a unidade → revisão do rascunho →
-            documento finalizado.
-
-            Roteiro cena a cena e configuração de captura em
-            `app.sindiops/docs/roteiro-videos.md`; o cenário gravado sai de
-            `php artisan demo:prepare`, que o reconstrói igual toda vez — quem
-            grava erra a tomada e precisa reencontrar a mesma tela.
-          -->
-<Demo
-            nome="demo-notificacao"
+          <Demo
+            nome="demo-contrato"
             class="mt-6"
-            descricao="Demonstração do SindiOps: a pergunta sobre obra com furadeira no sábado recebe resposta citando os artigos 6º e 52 do regimento, e daí sai uma notificação para a unidade 4, revisada e finalizada pelo síndico"
-            alt="Notificação gerada pelo SindiOps para a unidade 4, com o fato descrito e os artigos 6º e 52 do regimento como fundamento"
+            descricao="Demonstração do SindiOps: o prazo de não renovação com a cláusula que o define, a conferência do reajuste com o valor cobrado pelo fornecedor, e a conta mês a mês apontando uma cobrança de R$ 9,94 acima do devido"
+            alt="Conferência de reajuste no SindiOps: valor devido de R$ 2.180,06 contra R$ 2.190,00 cobrados, com a conta mês a mês aberta"
           />
-          <p class="mt-3 text-[0.95rem] text-grafite">Da pergunta à notificação assinada — sem sair da tela, sem abrir o PDF da convenção.</p>
+          <p class="mt-3 text-[0.95rem] text-grafite">
+            O prazo vem com a cláusula que o define. A conta usa a série oficial do Banco Central e abre mês a mês —
+            você refaz no papel na frente do fornecedor.
+          </p>
         </div>
       </section>
 
-      <!-- ============ 3. A segunda decisão: orçamento ============ -->
+      <!-- ============ 3. Primeira dor: o contrato ============ -->
       <!--
-        A capacidade que o produto ganhou depois da consulta, e que precisa de
-        prova visual do mesmo peso que a do herói: lá o fio liga a resposta ao
-        artigo, aqui liga o número da grade à linha da proposta que o comprova.
-        Sem esta seção a página continuaria dizendo que o produto é sobre a
-        convenção.
+        **Primeira das três**, desde 11/09/2026: antes vinha por último, como
+        continuação do orçamento na vida real (contrata-se e o dinheiro começa a
+        sair). A ordem mudou porque a conversa com lead mostrou o contrário — o
+        prédio já tem contratos correndo, então esta é a única capacidade que
+        não espera nada acontecer para render resultado.
+
+        A figura da conferência foi para o herói. Aqui fica o texto e o restante
+        da prova, para a seção não repetir o que a pessoa acabou de ver.
+      -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <div>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">1 · O dinheiro que já está saindo</p>
+            <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+              Contratos do condomínio: os que você herdou, e o prazo que ninguém viu passar
+            </h2>
+            <p class="mt-5 max-w-prose">
+              Elevador, limpeza, jardim, dedetização, seguro. Você não escolheu nenhum deles, e todos saem da conta do
+              condomínio. O contrato do elevador renova sozinho porque o aviso tinha que sair 60 dias antes; a fatura da
+              limpeza sobe 12% em março e o fornecedor diz que é o índice.
+            </p>
+            <p class="mt-4 max-w-prose">
+              Suba o contrato — e os aditivos, que continuam valendo junto com o original. O sistema lê e monta a ficha:
+              objeto, valor, vigência, aviso prévio, índice, multa, garantias. <strong>Cada campo com a cláusula que o
+              sustenta</strong>, para você conferir um por um.
+            </p>
+            <p class="mt-4 max-w-prose">
+              Daí em diante ele avisa antes da janela fechar, confere o reajuste contra o índice oficial e escreve a
+              carta de não renovação com as cláusulas que sustentam a data. <strong>Ele só avisa sobre o que você
+              conferiu</strong> — enquanto a ficha não estiver confirmada, a tela diz que aquele contrato não está
+              sendo vigiado, em vez de ficar em silêncio.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 4. Segunda dor: o orçamento ============ -->
+      <!--
+        Segunda na ordem: depois do dinheiro que já sai vem o que vai sair. A
+        figura mantém a assinatura da página — o fio que liga a afirmação à
+        fonte —, aqui entre o número da grade e a linha da proposta que o
+        comprova.
       -->
       <section class="mx-auto w-full max-w-6xl px-5 py-14 md:px-8 md:py-20">
         <div class="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
           <div class="max-w-xl">
-            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">A decisão que custa caro</p>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">2 · O dinheiro que vai sair</p>
             <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
               Três orçamentos, três formatos, e o conselho perguntando por quê
             </h2>
@@ -484,163 +552,115 @@ const jsonLd = {
         }
       </section>
 
-      <!-- ============ 3.5 Terceira capacidade: o contrato ============ -->
+
+      <!-- ============ 5. Terceira dor: a convenção ============ -->
       <!--
-        Fica **depois** do orçamento porque é a continuação dele na vida real: o
-        síndico contrata e, no mês seguinte, o dinheiro começa a sair. A figura
-        repete a assinatura da página — o fio que liga a afirmação à cláusula —,
-        agora entre a conta do reajuste e o texto do contrato.
+        **Última das três, e era o herói até 11/09/2026.** Não é a menos
+        importante: é a regra que sustenta as outras duas — a alçada do síndico
+        para assinar o contrato e o rito que o orçamento precisa respeitar saem
+        daqui. Mas é a que menos aparece na conversa de quem ainda não é
+        cliente: a dúvida da convenção acontece algumas vezes por mês, enquanto
+        o dinheiro sai todos os dias.
 
-        Os números batem com o cenário do `demo:prepare` (R$ 1.850 corrigidos
-        por IPCA de 4,44%, cobrança de R$ 1.940). A página não pode divergir do
-        produto a um clique de distância, na frente de quem está avaliando
-        justamente se confia nela.
+        A figura é a assinatura visual da página, e ficou: a resposta ligada,
+        por um fio, ao trecho que a fundamenta, com o carimbo de versão vigente.
       -->
-      <section class="border-y border-fiopapel bg-white">
-        <div class="mx-auto grid w-full max-w-6xl gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14">
-          <div class="max-w-xl">
-            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">O dinheiro que sai todo mês</p>
-            <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
-              Contratos do condomínio: os que você herdou, e o prazo que ninguém viu passar
-            </h2>
-            <p class="mt-5 max-w-prose">
-              Elevador, limpeza, jardim, dedetização, seguro. Você não escolheu nenhum deles, e todos saem da conta do
-              condomínio. O contrato do elevador renova sozinho porque o aviso tinha que sair 60 dias antes; a fatura da
-              limpeza sobe 12% em março e o fornecedor diz que é o índice.
-            </p>
-            <p class="mt-4 max-w-prose">
-              Suba o contrato — e os aditivos, que continuam valendo junto com o original. O sistema lê e monta a ficha:
-              objeto, valor, vigência, aviso prévio, índice, multa, garantias. <strong>Cada campo com a cláusula que o
-              sustenta</strong>, para você conferir um por um.
-            </p>
-            <p class="mt-4 max-w-prose">
-              Daí em diante ele avisa antes da janela fechar, confere o reajuste contra o índice oficial e escreve a
-              carta de não renovação com as cláusulas que sustentam a data. <strong>Ele só avisa sobre o que você
-              conferiu</strong> — enquanto a ficha não estiver confirmada, a tela diz que aquele contrato não está
-              sendo vigiado, em vez de ficar em silêncio.
-            </p>
-          </div>
-
-          <figure class="m-0 min-w-0" aria-label="Exemplo de conferência de reajuste: a diferença cobrada a mais aponta, por um fio, a cláusula do contrato que define o índice">
-            <div class="rounded-sm border border-fiopapel bg-white p-5 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6">
-              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
-                <span class="uppercase tracking-wide">Manutenção de elevadores</span>
-                <span>reajuste de março</span>
-              </div>
-
-              <dl class="mt-4 space-y-2.5 font-protocolo text-[0.95rem]">
-                <div class="flex items-baseline justify-between gap-4">
-                  <dt class="text-grafite">Valor de partida</dt>
-                  <dd class="m-0">R$&nbsp;2.100,00</dd>
-                </div>
-                <div class="flex items-baseline justify-between gap-4">
-                  <dt class="text-grafite">IPCA acumulado (12 meses)</dt>
-                  <dd class="m-0"><span class="grifo">3,81%</span></dd>
-                </div>
-                <div class="flex items-baseline justify-between gap-4 border-t border-fiopapel pt-2.5">
-                  <dt class="text-grafite">Valor devido</dt>
-                  <dd class="m-0">R$&nbsp;2.180,06</dd>
-                </div>
-                <div class="flex items-baseline justify-between gap-4">
-                  <dt class="text-grafite">Valor cobrado</dt>
-                  <dd class="m-0">R$&nbsp;2.190,00</dd>
-                </div>
-              </dl>
-
-              <p class="mt-4 border-t border-fiopapel pt-3 font-protocolo text-[1rem] font-bold text-caneta">
-                Cobrança acima em R$&nbsp;9,94
-              </p>
-            </div>
-
-            <!-- O fio -->
-            <div class="ml-14 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
-              <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
-              <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
-            </div>
-
-            <!--
-              `pb-20`: a cláusula aqui tem três linhas e o carimbo é absoluto no
-              canto — com o `pb-14` da figura do herói, ele cobria a última
-              linha do texto que a figura existe para mostrar.
-            -->
-            <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 pb-20 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6 md:pb-20">
-              <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
-                <span class="uppercase tracking-wide">Contrato · cláusula terceira</span>
-                <span>fls. 4</span>
-              </div>
-              <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
-                <strong>3.2</strong> — <span class="grifo grifo-animado">O valor mensal será reajustado anualmente pela
-                variação acumulada do IPCA/IBGE dos últimos 12 (doze) meses, no mês de março.</span>
-              </p>
-              <span class="carimbo absolute right-4 bottom-4 px-3 py-1.5 text-[0.78rem]">
-                conferido<br />por você
-              </span>
-            </figcaption>
-          </figure>
+      <section class="mx-auto grid w-full max-w-6xl gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14">
+        <div class="max-w-xl">
+          <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">3 · A regra que sustenta as duas</p>
+          <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+            “Posso multar por obra no sábado?” — e a resposta vem com o artigo
+          </h2>
+          <p class="mt-5 max-w-prose">
+            A convenção tem 30 a 80 páginas em linguagem jurídica, às vezes escaneada, às vezes alterada em assembleia
+            sem que ninguém saiba qual versão vale. Hoje você procura no PDF por vinte minutos, liga para o advogado —
+            que cobra — ou decide de cabeça.
+          </p>
+          <p class="mt-4 max-w-prose">
+            Suba a convenção, o regimento e as atas. Pergunte em português e receba a resposta <strong>com o artigo, o
+            parágrafo, a página e o trecho grifado</strong>, sempre da versão vigente. Daí sai a circular, a notificação
+            ou a advertência, já com a fundamentação dentro — e nada é enviado sem a sua revisão.
+          </p>
+          <p class="mt-4 max-w-prose">
+            <strong>Se a convenção não trata do assunto, ele responde que não encontrou</strong>, em vez de inventar. É
+            essa recusa que separa a ferramenta de um texto bem escrito que ninguém consegue conferir.
+          </p>
         </div>
 
-        <!--
-          Como no orçamento: o vídeo vem **depois** da figura, não no lugar
-          dela. A figura é lida em meio segundo e sustenta a seção para quem não
-          dá play, para quem tem `prefers-reduced-motion` e para quem chegou com
-          a rede ruim.
+        <!-- ===== Assinatura: o fio da fonte ===== -->
+        <figure class="m-0" aria-label="Exemplo de consulta: a resposta aponta, por um fio, o trecho da convenção que a fundamenta">
+          <!-- Pergunta -->
+          <div class="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-tinta px-5 py-3.5 text-[1.05rem] text-papel">
+            “Posso multar por obra no sábado?”
+          </div>
 
-          Os números do vídeo e os da figura são os mesmos (R$ 2.100 corrigidos
-          por IPCA de 3,81%, cobrança de R$ 2.190) porque saem da mesma
-          gravação: divergir a poucos centímetros seria a página se contradizendo
-          na frente de quem está avaliando justamente se confia nela. Quando a
-          série do IBGE mudar o acumulado, os dois se atualizam juntos —
-          `tools/gravacao/gravar.sh` regrava e o corte reescreve a figura.
-        -->
-        {
-          temVideoContrato && (
-          <div class="mx-auto w-full max-w-3xl px-5 pb-14 md:px-8 md:pb-20">
-            <h3 class="font-display text-[1.25rem] font-bold md:text-[1.5rem]">Do prazo ao reajuste conferido</h3>
-<Demo
-              nome="demo-contrato"
-              class="mt-5"
-              descricao="Demonstração do SindiOps: o prazo de não renovação com a cláusula que o define, a conferência do reajuste com o valor cobrado pelo fornecedor, e a conta mês a mês apontando uma cobrança de R$ 9,94 acima do devido"
-              alt="Conferência de reajuste no SindiOps: valor devido de R$ 2.180,06 contra R$ 2.190,00 cobrados, com a conta mês a mês aberta"
-            />
-            <p class="mt-3 text-[0.95rem] text-grafite">
-              O prazo vem com a cláusula que o define. A conta usa a série oficial do Banco Central e abre mês a mês —
-              você refaz no papel na frente do fornecedor.
+          <!-- Resposta -->
+          <div class="mt-4 max-w-[92%] rounded-2xl rounded-bl-sm border border-fiopapel bg-white px-5 py-4 shadow-sm">
+            <p class="text-[1.05rem]">
+              <strong>Pode.</strong> Obras com ruído são permitidas só de segunda a sexta, das 8h às 17h. Obra no
+              sábado infringe o §1º do Art. 9º da convenção, e a advertência e a multa estão previstas no mesmo
+              parágrafo.
+            </p>
+            <p class="mt-3">
+              <span class="inline-block rounded border-2 border-caneta bg-white px-2.5 py-1 font-protocolo text-[0.9rem] font-bold text-caneta">
+                Art. 9º, §1º&nbsp;·&nbsp;fls. 34
+              </span>
             </p>
           </div>
-          )
-        }
+
+          <!-- O fio -->
+          <div class="ml-14 h-10 w-[3px] bg-caneta relative" aria-hidden="true">
+            <span class="absolute -top-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+            <span class="absolute -bottom-[3px] -left-[3.5px] h-2.5 w-2.5 rounded-full bg-caneta"></span>
+          </div>
+
+          <!-- O documento -->
+          <figcaption class="relative rounded-sm border border-fiopapel bg-white p-5 pb-14 shadow-[0_1px_3px_rgba(28,30,34,0.12)] md:p-6 md:pb-14">
+            <div class="flex items-baseline justify-between gap-4 border-b border-fiopapel pb-2 font-protocolo text-[0.82rem] text-grafite">
+              <span class="uppercase tracking-wide">Convenção do Condomínio</span>
+              <span>fls. 34</span>
+            </div>
+            <p class="mt-4 font-protocolo text-[0.95rem] leading-[1.75]">
+              <strong>Art. 9º</strong> — As obras que produzam ruído somente poderão ser executadas de segunda-feira a
+              sexta-feira, entre 8h e 17h.
+              <br />
+              <strong>§1º</strong> — <span class="grifo grifo-animado">A execução de obras aos sábados, domingos e
+              feriados sujeitará o condômino à advertência e, em caso de reincidência, à multa prevista nesta
+              convenção.</span>
+            </p>
+            <span class="carimbo absolute right-4 bottom-4 px-3 py-1.5 text-[0.78rem]">
+              versão vigente<br />reg. 14/03/2026
+            </span>
+          </figcaption>
+        </figure>
       </section>
 
-      <!-- ============ 4. As dores ============ -->
+      <!--
+        O vídeo da notificação vem depois da figura, como nas outras duas
+        seções: a figura é lida em meio segundo e sustenta a seção para quem não
+        dá play.
+      -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <h3 class="font-display text-[1.25rem] font-bold md:text-[1.5rem]">Da pergunta à notificação assinada</h3>
+          <Demo
+            nome="demo-notificacao"
+            class="mt-5"
+            descricao="Demonstração do SindiOps: a pergunta sobre obra com furadeira no sábado recebe resposta citando os artigos 6º e 52 do regimento, e daí sai uma notificação para a unidade 4, revisada e finalizada pelo síndico"
+            alt="Notificação gerada pelo SindiOps para a unidade 4, com o fato descrito e os artigos 6º e 52 do regimento como fundamento"
+          />
+          <p class="mt-3 text-[0.95rem] text-grafite">
+            Sem sair da tela, sem abrir o PDF da convenção — e com o artigo citado dentro do documento.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 6. As dores ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">O que muda na sua semana</h2>
 
         <div class="mt-10 space-y-12">
-          <article>
-            <h3 class="text-xl font-bold">“Posso multar por obra no sábado?”</h3>
-            <p class="mt-2.5 max-w-prose">
-              Você para o que está fazendo, abre o PDF da convenção, rola 40 páginas e reza pra estar na versão certa.
-              Agora você pergunta e recebe o artigo — com a página, pra conferir em dois segundos.
-            </p>
-          </article>
-
-          <article>
-            <h3 class="text-xl font-bold">Notificação fundamentada em 30 segundos</h3>
-            <p class="mt-2.5 max-w-prose">
-              Da resposta sai a notificação pronta: identificação da unidade, o fato, o fundamento com o artigo citado,
-              o prazo e a consequência. Você revisa, ajusta e envia.
-            </p>
-          </article>
-
-          <article>
-            <h3 class="text-xl font-bold">A obra de R$ 44 mil que você vai ter que justificar</h3>
-            <p class="mt-2.5 max-w-prose">
-              Do edital que padroniza o que cada fornecedor cota até o registro de por que você escolheu aquele. Quando
-              a pergunta vier — e ela vem —, a resposta já está pronta e por escrito.
-            </p>
-          </article>
-
           <article>
             <h3 class="text-xl font-bold">O contrato que renovou sozinho por mais um ano</h3>
             <p class="mt-2.5 max-w-prose">
@@ -649,7 +669,6 @@ const jsonLd = {
               carta de não renovação sai da mesma tela do aviso.
             </p>
           </article>
-
           <article>
             <h3 class="text-xl font-bold">“Por que essa conta subiu 12%?”</h3>
             <p class="mt-2.5 max-w-prose">
@@ -658,7 +677,27 @@ const jsonLd = {
               dele.
             </p>
           </article>
-
+          <article>
+            <h3 class="text-xl font-bold">A obra de R$ 44 mil que você vai ter que justificar</h3>
+            <p class="mt-2.5 max-w-prose">
+              Do edital que padroniza o que cada fornecedor cota até o registro de por que você escolheu aquele. Quando
+              a pergunta vier — e ela vem —, a resposta já está pronta e por escrito.
+            </p>
+          </article>
+          <article>
+            <h3 class="text-xl font-bold">“Posso multar por obra no sábado?”</h3>
+            <p class="mt-2.5 max-w-prose">
+              Você para o que está fazendo, abre o PDF da convenção, rola 40 páginas e reza pra estar na versão certa.
+              Agora você pergunta e recebe o artigo — com a página, pra conferir em dois segundos.
+            </p>
+          </article>
+          <article>
+            <h3 class="text-xl font-bold">Notificação fundamentada em 30 segundos</h3>
+            <p class="mt-2.5 max-w-prose">
+              Da resposta sai a notificação pronta: identificação da unidade, o fato, o fundamento com o artigo citado,
+              o prazo e a consequência. Você revisa, ajusta e envia.
+            </p>
+          </article>
           <article>
             <h3 class="text-xl font-bold">Seus 12 prédios, uma conta só</h3>
             <p class="mt-2.5 max-w-prose">
@@ -666,15 +705,21 @@ const jsonLd = {
               vez, disponíveis em todos. Uma assinatura, um login, sem trocar de sistema a cada prédio.
             </p>
           </article>
+
+
+
+
+
         </div>
         </div>
       </section>
 
-      <!-- ============ 5. Como funciona ============ -->
+      <!-- ============ 7. Como funciona ============ -->
       <!--
-        Dois caminhos lado a lado, e não um fluxo só: o síndico entra pelo que o
-        aperta hoje — a dúvida da convenção ou a obra que precisa contratar — e
-        precisa reconhecer o seu caso em três passos, sem ler o outro.
+        Três caminhos lado a lado, e não um fluxo só: o síndico entra pelo que o
+        aperta hoje e precisa reconhecer o seu caso em três passos, sem ler os
+        outros. A ordem é a mesma das seções acima — contrato primeiro, porque é
+        o dinheiro que já está saindo.
       -->
       <section class="mx-auto w-full max-w-5xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
@@ -688,38 +733,40 @@ const jsonLd = {
         -->
         <div class="mt-10 grid gap-12 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
           <div>
-            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Documento</p>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Contrato</p>
             <ol class="mt-5 space-y-7">
               <li class="grid grid-cols-[2.5rem_1fr] gap-3">
                 <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">1.</span>
                 <div>
-                  <h3 class="text-lg font-bold">Suba os documentos</h3>
+                  <h3 class="text-lg font-bold">Suba o contrato</h3>
                   <p class="mt-1.5">
-                    Convenção, regimento e atas em PDF. O sistema lê e organiza por artigo — inclusive escaneado.
+                    Com os aditivos: eles valem junto com o original, não no lugar dele. O sistema lê e propõe a ficha.
                   </p>
                 </div>
               </li>
               <li class="grid grid-cols-[2.5rem_1fr] gap-3">
                 <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">2.</span>
                 <div>
-                  <h3 class="text-lg font-bold">Pergunte</h3>
+                  <h3 class="text-lg font-bold">Confira a ficha</h3>
                   <p class="mt-1.5">
-                    Em português, do jeito que o morador te perguntou. Sem palavra-chave, sem filtro, sem manual.
+                    Valor, vigência, aviso prévio, índice — cada campo com a cláusula ao lado. Só o que você confirmar
+                    passa a valer.
                   </p>
                 </div>
               </li>
               <li class="grid grid-cols-[2.5rem_1fr] gap-3">
                 <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">3.</span>
                 <div>
-                  <h3 class="text-lg font-bold">Use a resposta</h3>
+                  <h3 class="text-lg font-bold">Deixe o prazo com ele</h3>
                   <p class="mt-1.5">
-                    Confira a citação, gere a circular ou a notificação, envie por e-mail, exporte em PDF ou copie pro
-                    WhatsApp.
+                    Ele avisa antes da janela fechar, confere o reajuste cobrado e escreve a carta de não renovação
+                    quando você decidir sair.
                   </p>
                 </div>
               </li>
             </ol>
           </div>
+        </div>
 
           <div>
             <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Orçamento</p>
@@ -757,43 +804,41 @@ const jsonLd = {
           </div>
 
           <div>
-            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Contrato</p>
+            <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">Documento</p>
             <ol class="mt-5 space-y-7">
               <li class="grid grid-cols-[2.5rem_1fr] gap-3">
                 <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">1.</span>
                 <div>
-                  <h3 class="text-lg font-bold">Suba o contrato</h3>
+                  <h3 class="text-lg font-bold">Suba os documentos</h3>
                   <p class="mt-1.5">
-                    Com os aditivos: eles valem junto com o original, não no lugar dele. O sistema lê e propõe a ficha.
+                    Convenção, regimento e atas em PDF. O sistema lê e organiza por artigo — inclusive escaneado.
                   </p>
                 </div>
               </li>
               <li class="grid grid-cols-[2.5rem_1fr] gap-3">
                 <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">2.</span>
                 <div>
-                  <h3 class="text-lg font-bold">Confira a ficha</h3>
+                  <h3 class="text-lg font-bold">Pergunte</h3>
                   <p class="mt-1.5">
-                    Valor, vigência, aviso prévio, índice — cada campo com a cláusula ao lado. Só o que você confirmar
-                    passa a valer.
+                    Em português, do jeito que o morador te perguntou. Sem palavra-chave, sem filtro, sem manual.
                   </p>
                 </div>
               </li>
               <li class="grid grid-cols-[2.5rem_1fr] gap-3">
                 <span class="font-protocolo text-[1.5rem] font-bold text-caneta" aria-hidden="true">3.</span>
                 <div>
-                  <h3 class="text-lg font-bold">Deixe o prazo com ele</h3>
+                  <h3 class="text-lg font-bold">Use a resposta</h3>
                   <p class="mt-1.5">
-                    Ele avisa antes da janela fechar, confere o reajuste cobrado e escreve a carta de não renovação
-                    quando você decidir sair.
+                    Confira a citação, gere a circular ou a notificação, envie por e-mail, exporte em PDF ou copie pro
+                    WhatsApp.
                   </p>
                 </div>
               </li>
             </ol>
           </div>
-        </div>
       </section>
 
-      <!-- ============ 6. Confiança ============ -->
+      <!-- ============ 8. Confiança ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
@@ -841,7 +886,7 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ============ 7. A IA, e onde ela não decide ============ -->
+      <!-- ============ 9. A IA, e onde ela não decide ============ -->
       <!--
         A objeção que todo síndico com celular na mão vai fazer — "eu já faço
         isso no ChatGPT". Responder com "nosso modelo é melhor" perderia, porque
@@ -904,7 +949,7 @@ const jsonLd = {
         </p>
       </section>
 
-      <!-- ============ 8. Para quem é ============ -->
+      <!-- ============ 10. Para quem é ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
@@ -929,7 +974,7 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ============ 9. Posicionamento ============ -->
+      <!-- ============ 11. Posicionamento ============ -->
       <section class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
           Não é mais um sistema de gestão condominial
@@ -949,7 +994,7 @@ const jsonLd = {
         </p>
       </section>
 
-      <!-- ============ 10. FAQ ============ -->
+      <!-- ============ 12. FAQ ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Perguntas frequentes</h2>
@@ -984,7 +1029,7 @@ const jsonLd = {
         </div>
       </section>
 
-      <!-- ============ 11. CTA final (formulário) ============ -->
+      <!-- ============ 13. CTA final (formulário) ============ -->
       <section id="acesso" class="mx-auto w-full max-w-3xl scroll-mt-8 px-5 py-14 md:px-8 md:py-20">
         <h2 class="font-display text-[1.6rem] font-bold md:text-[2rem]">Entre na lista de acesso antecipado</h2>
         <p class="mt-4 max-w-prose">
@@ -1124,7 +1169,7 @@ const jsonLd = {
       </section>
     </main>
 
-    <!-- ============ 12. Rodapé ============ -->
+    <!-- ============ 14. Rodapé ============ -->
     <footer class="border-t border-fiopapel">
       <div
         class="mx-auto flex w-full max-w-3xl flex-col gap-8 px-5 py-10 text-[0.95rem] text-grafite md:flex-row md:items-end md:justify-between md:px-8"
