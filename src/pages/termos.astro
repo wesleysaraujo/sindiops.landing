@@ -15,11 +15,11 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-
 
 const controlador = await obterControlador();
 
-const VERSAO = '1.0';
-const VIGENTE_DESDE = '2 de setembro de 2026';
+const VERSAO = '1.1';
+const VIGENTE_DESDE = '11 de setembro de 2026';
 // A mesma data, para quem lê por máquina. Duas constantes lado a lado
 // porque divergir aqui é imediatamente visível na revisão.
-const VIGENTE_DESDE_ISO = '2026-09-02';
+const VIGENTE_DESDE_ISO = '2026-09-11';
 
 const indisponivel = 'não informado — peça a identificação completa em contato@sindiops.com.br';
 
@@ -64,18 +64,25 @@ const identificacao = [
 
   <h2>2. O que o serviço faz</h2>
 
-  <p>O SindiOps organiza duas decisões do síndico e guarda o registro de como cada uma foi tomada:</p>
+  <p>O SindiOps organiza três decisões do síndico e guarda o registro de como cada uma foi tomada:</p>
 
   <ul>
     <li>
-      <strong>Decidir com documento.</strong> Você envia a convenção, o regimento e as atas do condomínio; o sistema
-      indexa esses arquivos e responde às suas perguntas <em>citando o trecho</em> que fundamenta a resposta. A partir
-      daí, gera rascunhos de circular, notificação e advertência.
+      <strong>Acompanhar o que já foi contratado.</strong> Você envia os contratos do condomínio e seus aditivos; o
+      sistema lê e propõe uma ficha — objeto, valor, vigência, aviso prévio, índice de reajuste, multa, garantias —,
+      cada campo acompanhado da cláusula que o sustenta, para que <em>você</em> confirme um por um. A partir dos campos
+      que você confirmar, ele acompanha prazos, confere o reajuste cobrado contra a série oficial do índice e redige a
+      carta de não renovação.
     </li>
     <li>
       <strong>Decidir com dinheiro.</strong> Você define o que quer contratar e o peso de cada critério; o sistema gera
       o edital, envia aos fornecedores, lê as propostas recebidas mostrando a linha que comprova cada valor, calcula a
       nota pela fórmula que você configurou e escreve um parecer. A contratação é ato seu.
+    </li>
+    <li>
+      <strong>Decidir com documento.</strong> Você envia a convenção, o regimento e as atas do condomínio; o sistema
+      indexa esses arquivos e responde às suas perguntas <em>citando o trecho</em> que fundamenta a resposta. A partir
+      daí, gera rascunhos de circular, notificação e advertência.
     </li>
   </ul>
 
@@ -98,11 +105,24 @@ const identificacao = [
     texto de apoio; escolher o fornecedor é ato seu, registrado com a sua justificativa.
   </p>
 
+  <p>
+    <strong>Não encerra nem renegocia contrato.</strong> A carta de não renovação é redigida com as cláusulas que
+    sustentam a data, e nada mais: assinar, enviar à contratada e cumprir a forma que o contrato exige são atos seus.
+    O mesmo vale para a conferência de reajuste — ela é uma conta que você leva ao fornecedor, não uma contestação
+    feita em seu nome.
+  </p>
+
+  <p>
+    <strong>Não substitui o seu controle de prazos.</strong> Os avisos descritos na cláusula 5 são auxiliares; a
+    obrigação de acompanhar vigência, aviso prévio e reajuste dos contratos do condomínio permanece sua.
+  </p>
+
   <h2>4. Conteúdo gerado por inteligência artificial</h2>
 
   <p>
-    Respostas de consulta, pareceres de proposta, editais e documentos são produzidos com apoio de modelos de
-    linguagem. Isso implica limites que você precisa conhecer antes de usar o resultado:
+    Respostas de consulta, pareceres de proposta, editais, documentos e a <strong>proposta de ficha do contrato</strong>
+    são produzidos com apoio de modelos de linguagem. Isso implica limites que você precisa conhecer antes de usar o
+    resultado:
   </p>
 
   <ul>
@@ -121,9 +141,43 @@ const identificacao = [
       multar ou contratar é parte do seu trabalho, e o produto existe para tornar essa conferência possível — não para
       dispensá-la.
     </li>
+    <li>
+      <strong>Nem tudo passa por modelo de linguagem, e isso é deliberado.</strong> A nota do comparativo de propostas
+      e a conferência de reajuste são cálculos determinísticos, feitos no código sobre valores que você confirmou e
+      sobre a série oficial do índice — dá para refazê-los a lápis, e é essa a intenção. Quando a série do índice não
+      estiver publicada para o período, o sistema recusa a conferência em vez de estimar.
+    </li>
   </ul>
 
-  <h2>5. Conta e acesso</h2>
+  <h2>5. Avisos automáticos e comunicações do sistema</h2>
+
+  <p>
+    O sistema envia avisos por conta própria — prazo de contrato chegando, documento cuja leitura falhou, solicitação de
+    acesso, novidades do produto — por e-mail e na caixa de avisos dentro da aplicação. Três limites importam, e o
+    primeiro é o que decide os outros dois:
+  </p>
+
+  <ul>
+    <li>
+      <strong>O sistema só avisa sobre dado que uma pessoa conferiu.</strong> Enquanto a ficha do contrato não estiver
+      confirmada por você, aquele contrato não é acompanhado, e a aplicação declara isso na tela em vez de ficar em
+      silêncio. Dado extraído e não conferido não gera aviso.
+    </li>
+    <li>
+      <strong>O aviso é auxiliar, não garantia.</strong> E-mail depende de fatores fora do nosso alcance — filtro de
+      spam, caixa cheia, endereço desatualizado, indisponibilidade do provedor de envio —, e por isso todo aviso fica
+      também registrado na aplicação, onde você o encontra independentemente da sua caixa de entrada. Ainda assim, a
+      ausência de aviso não transfere para nós a responsabilidade por um prazo perdido: ela permanece sua, conforme a
+      cláusula 3.
+    </li>
+    <li>
+      <strong>Comunicações do produto não são publicidade de terceiros.</strong> Usamos o seu endereço para falar do
+      SindiOps e do seu uso dele, nunca para anunciar produtos de outras empresas. Os avisos operacionais fazem parte do
+      serviço; os de novidade e uso podem ser interrompidos a seu pedido, pelos canais de contato.
+    </li>
+  </ul>
+
+  <h2>6. Conta e acesso</h2>
 
   <p>
     <strong>Não há autocadastro.</strong> As contas são criadas pela nossa equipe a partir de uma solicitação, e o
@@ -139,7 +193,7 @@ const identificacao = [
 
   <p>Cada e-mail corresponde a uma única pessoa no sistema, e contas não podem ser compartilhadas entre pessoas.</p>
 
-  <h2>6. Suas responsabilidades sobre o conteúdo</h2>
+  <h2>7. Suas responsabilidades sobre o conteúdo</h2>
 
   <p>
     Os documentos e dados que você envia continuam sendo seus — e a responsabilidade por eles também. Ao usar o
@@ -167,13 +221,20 @@ const identificacao = [
     dentro do mesmo escritório o acesso é limitado aos condomínios vinculados a cada pessoa.
   </p>
 
-  <h2>7. Planos, limites e pagamento</h2>
+  <h2>8. Planos, limites e pagamento</h2>
 
   <p>
     A cobrança é <strong>por condomínio ativo</strong>. Arquivar um condomínio devolve a vaga do plano na hora e não
     apaga nada — documentos, consultas e histórico permanecem, e reativá-lo consome vaga novamente. O plano também
-    define quantas pessoas têm acesso à conta (contando o dono) e quantos processos de orçamento podem ser abertos por
-    mês.
+    define quantas pessoas têm acesso à conta (contando o dono), quantos processos de orçamento podem ser abertos por
+    mês e quantas leituras de contrato o mês comporta.
+  </p>
+
+  <p>
+    <strong>A quota de contratos é de leitura, não de contrato guardado.</strong> Cadastrar contrato, anexar aditivo,
+    receber aviso de prazo e conferir reajuste não consomem quota; o que conta são as duas operações que enviam o
+    contrato inteiro para leitura — montar a ficha e conferir o contrato contra a convenção. A contagem se renova no
+    primeiro dia de cada mês, e atingir o limite não interrompe os avisos dos contratos que já estão acompanhados.
   </p>
 
   <p>
@@ -185,18 +246,19 @@ const identificacao = [
 
   <p>Reajustes e mudanças de preço são comunicados com antecedência mínima de 30 dias e nunca retroagem.</p>
 
-  <h2>8. Disponibilidade e suporte</h2>
+  <h2>9. Disponibilidade e suporte</h2>
 
   <p>
     Trabalhamos para manter o serviço disponível, mas ele é fornecido "no estado em que se encontra", sem garantia de
     funcionamento ininterrupto. Manutenções programadas são avisadas quando previsíveis. Partes do produto dependem de
-    serviços de terceiros — provedores de modelo de linguagem, envio de e-mail e a base pública de CNPJ — e a
-    indisponibilidade deles pode afetar funcionalidades específicas sem que isso caracterize falha do serviço como um
-    todo. Onde essa dependência existe, o produto oferece caminho manual: consulta de CNPJ fora do ar não impede
-    cadastrar um fornecedor.
+    serviços de terceiros — provedores de modelo de linguagem, envio de e-mail, a base pública de CNPJ e as séries de
+    índices do Banco Central — e a indisponibilidade deles pode afetar funcionalidades específicas sem que isso
+    caracterize falha do serviço como um todo. Onde essa dependência existe, o produto oferece caminho manual ou recusa
+    explícita: consulta de CNPJ fora do ar não impede cadastrar um fornecedor, e índice ainda não publicado para o
+    período faz a conferência de reajuste ser recusada em vez de estimada.
   </p>
 
-  <h2>9. Propriedade intelectual</h2>
+  <h2>10. Propriedade intelectual</h2>
 
   <p>
     O software, a marca, o design e a documentação do SindiOps são nossos. Você recebe uma licença de uso não exclusiva
@@ -209,7 +271,7 @@ const identificacao = [
     propriedade sobre a convenção do seu condomínio nem sobre a circular que você redigiu.
   </p>
 
-  <h2>10. Suspensão e encerramento</h2>
+  <h2>11. Suspensão e encerramento</h2>
 
   <p>
     Você pode encerrar a conta a qualquer momento, pelos canais de contato. Podemos suspender ou encerrar o acesso em
@@ -223,7 +285,7 @@ const identificacao = [
     <a href="/privacidade">Política de Privacidade</a>, ressalvado o que a lei obrigue a conservar.
   </p>
 
-  <h2>11. Limitação de responsabilidade</h2>
+  <h2>12. Limitação de responsabilidade</h2>
 
   <p>
     O SindiOps não responde por decisões tomadas pelo usuário, ainda que apoiadas em conteúdo produzido pela
@@ -237,7 +299,7 @@ const identificacao = [
     anteriores ao evento. Nada aqui afasta direitos previstos no Código de Defesa do Consumidor quando aplicável.
   </p>
 
-  <h2>12. Mudanças nestes termos</h2>
+  <h2>13. Mudanças nestes termos</h2>
 
   <p>
     Estes termos podem ser atualizados. Mudanças relevantes são comunicadas por e-mail e dentro do produto com
@@ -246,7 +308,7 @@ const identificacao = [
     aceite que não identifica o que foi aceito não prova nada.
   </p>
 
-  <h2>13. Lei aplicável e foro</h2>
+  <h2>14. Lei aplicável e foro</h2>
 
   <p>
     Estes termos são regidos pela lei brasileira. Fica eleito o foro da comarca do domicílio do usuário para dirimir

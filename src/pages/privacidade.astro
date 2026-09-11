@@ -9,11 +9,11 @@ Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-
 
 const controlador = await obterControlador();
 
-const VERSAO = '1.0';
-const VIGENTE_DESDE = '2 de setembro de 2026';
+const VERSAO = '1.1';
+const VIGENTE_DESDE = '11 de setembro de 2026';
 // A mesma data, para quem lê por máquina. Duas constantes lado a lado
 // porque divergir aqui é imediatamente visível na revisão.
-const VIGENTE_DESDE_ISO = '2026-09-02';
+const VIGENTE_DESDE_ISO = '2026-09-11';
 
 const indisponivel = 'não informado — peça a identificação completa em contato@sindiops.com.br';
 
@@ -47,8 +47,14 @@ const operadores = [
   },
   {
     nome: 'Resend',
-    finalidade: 'Enviar e-mails do produto: convite, redefinição de senha, edital ao fornecedor e documentos que você decide enviar.',
+    finalidade: 'Enviar e-mails do produto: convite, redefinição de senha, aviso de prazo de contrato, edital ao fornecedor e documentos que você decide enviar.',
     local: 'Estados Unidos',
+  },
+  {
+    nome: 'Banco Central do Brasil',
+    finalidade:
+      'Consultar as séries oficiais de índices (IPCA, IGP-M, INPC) para conferir o reajuste cobrado nos contratos do condomínio. A consulta envia apenas o código da série e o período — nenhum dado seu, do condomínio ou do fornecedor.',
+    local: 'Brasil',
   },
   {
     nome: 'minha-receita.org',
@@ -104,7 +110,8 @@ const operadores = [
 
   <p>
     <strong>Somos operadores</strong> dos dados que você insere sobre o condomínio que administra: moradores cadastrados
-    nas unidades, conteúdo dos documentos enviados, dados dos fornecedores. Aí o controlador é você (ou o condomínio),
+    nas unidades, conteúdo dos documentos enviados — convenção, regimento, atas, propostas e contratos com seus
+    aditivos —, a ficha que você confere a partir deles e os dados dos fornecedores. Aí o controlador é você (ou o condomínio),
     e nós tratamos esses dados <em>seguindo as suas instruções</em>, para prestar o serviço contratado — e nada além
     disso.
   </p>
@@ -256,8 +263,13 @@ const operadores = [
       registro.
     </li>
     <li>
-      <strong>Registros técnicos:</strong> mantidos por até 6 meses; os registros de acesso a aplicações de internet,
-      pelos 6 meses que o Marco Civil da Internet exige (Lei 12.965/2014, art. 15).
+      <strong>Histórico de envio de e-mail:</strong> guardamos <em>o fato</em> de cada envio — destinatário, assunto,
+      data e se o provedor confirmou o recebimento —, nunca o corpo da mensagem. Serve para responder "o aviso saiu?"
+      quando alguém diz que não recebeu. Eliminado junto com os registros de atividade, no mesmo prazo.
+    </li>
+    <li>
+      <strong>Registros técnicos e de atividade:</strong> mantidos por até 6 meses; os registros de acesso a aplicações
+      de internet, pelos 6 meses que o Marco Civil da Internet exige (Lei 12.965/2014, art. 15).
     </li>
   </ul>
 
