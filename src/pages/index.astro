@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Marca from '../components/Marca.astro';
 import Demo from '../components/Demo.astro';
 import Medicao from '../components/Medicao.astro';
+import { EMAIL, EMAIL_URL, WHATSAPP, WHATSAPP_URL } from '../lib/contato';
 
 // SindiOps — landing de acesso antecipado.
 // Página 100% estática (SEO): o HTML sai pronto do build.
@@ -1178,8 +1179,17 @@ const jsonLd = {
           <p class="font-bold text-tinta">SindiOps</p>
           <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
           <p class="mt-1">
-            <a href="mailto:contato@sindiops.com.br" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
-              contato@sindiops.com.br
+            <a href={EMAIL_URL} class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+              {EMAIL}
+            </a>
+          </p>
+          <p class="mt-1">
+            <a
+              href={WHATSAPP_URL}
+              class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+              rel="noopener"
+            >
+              WhatsApp {WHATSAPP}
             </a>
           </p>
           <nav class="mt-3 flex flex-wrap gap-x-5 gap-y-2">

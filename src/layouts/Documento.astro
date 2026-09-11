@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { EMAIL, EMAIL_URL, WHATSAPP, WHATSAPP_URL } from '../lib/contato';
 import Marca from '../components/Marca.astro';
 
 /**
@@ -150,11 +151,15 @@ const jsonLd = {
           <a href="/privacidade" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
             Privacidade
           </a>
+          <a href={EMAIL_URL} class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            {EMAIL}
+          </a>
           <a
-            href="mailto:contato@sindiops.com.br"
+            href={WHATSAPP_URL}
             class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+            rel="noopener"
           >
-            contato@sindiops.com.br
+            WhatsApp {WHATSAPP}
           </a>
         </nav>
       </div>

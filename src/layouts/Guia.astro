@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { WHATSAPP, WHATSAPP_URL } from '../lib/contato';
 import Marca from '../components/Marca.astro';
 import Medicao from '../components/Medicao.astro';
 import { dataPorExtenso, type Guia } from '../lib/guias';
@@ -171,6 +172,13 @@ const jsonLd = {
           </a>
           <a href="/privacidade" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
             Privacidade
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+            rel="noopener"
+          >
+            WhatsApp {WHATSAPP}
           </a>
         </nav>
       </div>
