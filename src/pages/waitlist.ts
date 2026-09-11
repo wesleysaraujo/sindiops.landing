@@ -48,14 +48,28 @@ type Registro = {
  * Envia a solicitação ao app, que é onde ela vira fila de trabalho da equipe.
  *
  * O corpo é assinado com HMAC-SHA256: o segredo nunca viaja e um corpo alterado
- * no caminho invalida a assinatura. Devolve `false` em qualquer falha — quem
- * chama grava no arquivo local como rede de segurança.
+ * no caminho invalida a assinatura.
+ *
+ * **Devolve o motivo, e não só `false`.** Uma migração de domínio do app deixou
+ * a entrega quebrada por uma semana sem ninguém saber: o formulário responde
+ * sucesso de propósito (a pessoa não pode ver erro depois de preencher tudo), o
+ * arquivo de rede de segurança não existe em serverless, e o log dizia apenas
+ * "app indisponível" — que não distingue URL errada de segredo trocado, os dois
+ * casos mais prováveis justamente depois de mexer em ambiente. Sem o motivo, a
+ * investigação começa por adivinhação.
  */
-async function enviarAoApp(registro: Registro): Promise<boolean> {
+type Resultado = { entregue: true } | { entregue: false; motivo: string };
+
+async function enviarAoApp(registro: Registro): Promise<Resultado> {
   const url = import.meta.env.APP_LEADS_URL;
   const segredo = import.meta.env.APP_LEADS_SECRET;
 
-  if (!url || !segredo) return false;
+  if (!url || !segredo) {
+    return {
+      entregue: false,
+      motivo: `configuração ausente (APP_LEADS_URL ${url ? 'ok' : 'faltando'}, APP_LEADS_SECRET ${segredo ? 'ok' : 'faltando'})`,
+    };
+  }
 
   const corpo = JSON.stringify({
     name: registro.nome,
@@ -80,9 +94,30 @@ async function enviarAoApp(registro: Registro): Promise<boolean> {
       signal: AbortSignal.timeout(5000),
     });
 
-    return resposta.ok;
-  } catch {
-    return false;
+    if (resposta.ok) return { entregue: true };
+
+    // O corpo do erro é o que resolve o caso: o app responde "Assinatura
+    // ausente" quando o segredo não está configurado do lado dele e
+    // "Assinatura inválida" quando os dois segredos divergem. São problemas
+    // diferentes, com correções diferentes, e ambos chegam como 401.
+    // Numa linha só: o JSON do erro vem formatado com quebras, e log
+    // multilinha em plataforma serverless se fragmenta e escapa do filtro.
+    const detalhe = await resposta
+      .text()
+      .then((t) => t.replace(/\s+/g, ' ').trim().slice(0, 200))
+      .catch(() => '');
+
+    return {
+      entregue: false,
+      motivo: `app respondeu ${resposta.status} em ${url} — ${detalhe || 'sem corpo'}`,
+    };
+  } catch (erro) {
+    // Erro de rede: DNS que não resolve (domínio antigo depois de migrar),
+    // certificado, ou o timeout de 5s.
+    return {
+      entregue: false,
+      motivo: `falha de rede ao chamar ${url} — ${erro instanceof Error ? erro.message : String(erro)}`,
+    };
   }
 }
 
@@ -127,7 +162,7 @@ export const POST: APIRoute = async ({ request }) => {
     criado_em: new Date().toISOString(),
   };
 
-  const entregue = await enviarAoApp(registro);
+  const resultado = await enviarAoApp(registro);
 
   // O arquivo deixou de ser o destino e virou rede de segurança: só guarda o
   // que o app não recebeu. `php artisan leads:import` recupera essas linhas.
@@ -136,13 +171,18 @@ export const POST: APIRoute = async ({ request }) => {
   // falha e o registro vai para o log da plataforma. Sem o try/catch, o EROFS
   // subiria como 500 e a pessoa veria erro depois de já ter preenchido tudo —
   // perderíamos o lead E a confiança dela.
-  if (!entregue) {
+  if (!resultado.entregue) {
+    // O motivo vem antes do registro na mesma linha: quem lê o log da
+    // plataforma precisa saber **por que** falhou antes de decidir se recupera
+    // a lista ou corrige a configuração.
+    console.error(`[waitlist] não entregue ao app: ${resultado.motivo}`);
+
     try {
       const dir = path.resolve('./data');
       await mkdir(dir, { recursive: true });
       await appendFile(path.join(dir, 'waitlist.jsonl'), JSON.stringify(registro) + '\n', 'utf8');
     } catch {
-      console.error('[waitlist] app indisponível e disco somente leitura:', JSON.stringify(registro));
+      console.error('[waitlist] lead perdido (disco somente leitura):', JSON.stringify(registro));
     }
   }
 

@@ -2,3 +2,8 @@ node_modules/
 dist/
 .vercel/
 .env
+
+# Rede de segurança do formulário: só existe quando o app recusou um lead, e o
+# conteúdo é dado pessoal de quem pediu acesso. Nunca vai para o repositório —
+# recupere com `php artisan leads:import` e apague.
+data/
