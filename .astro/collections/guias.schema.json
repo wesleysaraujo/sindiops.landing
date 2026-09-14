@@ -24,7 +24,8 @@
           "enum": [
             "convencao",
             "orcamento",
-            "contrato"
+            "contrato",
+            "laudo"
           ]
         },
         "publicadoEm": {

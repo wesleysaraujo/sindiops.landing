@@ -42,7 +42,7 @@ const guias = defineCollection({
      */
     respostaCurta: z.string().min(80).max(400),
 
-    frente: z.enum(['convencao', 'orcamento', 'contrato']),
+    frente: z.enum(['convencao', 'orcamento', 'contrato', 'laudo']),
 
     publicadoEm: z.coerce.date(),
     revisadoEm: z.coerce.date().optional(),

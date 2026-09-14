@@ -22,6 +22,15 @@ export async function guiasPublicados(): Promise<Guia[]> {
  * afirmação errada ali chega ao morador como decisão do síndico. Contrato e
  * orçamento são conta e procedimento — erro se corrige sem custar o mandato de
  * ninguém.
+ *
+ * **Laudo fica do lado de contrato, e a escolha exigiu cuidado.** O assunto
+ * tangencia obrigação legal, mas o guia não afirma qual documento é obrigatório
+ * nem por quanto tempo vale: exigência e periodicidade são municipais e
+ * estaduais, e o texto manda conferir na legislação local em vez de responder
+ * por ela. O que ele ensina é método — inventariar, conferir o registro de quem
+ * assinou, contar o prazo para trás, fechar a pendência com comprovante. Se
+ * algum guia desta frente passar a afirmar obrigatoriedade, ele muda de lado
+ * aqui antes de ir ao ar.
  */
 function exigeAdvogado(frente: Guia['data']['frente']): boolean {
   return frente === 'convencao';
@@ -37,6 +46,11 @@ export const FRENTES = [
     id: 'contrato' as const,
     titulo: 'Contratos do prédio',
     descricao: 'Prazo, renovação automática, aviso prévio e reajuste dos contratos que você herdou.',
+  },
+  {
+    id: 'laudo' as const,
+    titulo: 'Laudos e certificações',
+    descricao: 'O que o prédio precisa manter em dia, quem assina, quando vence e o que o laudo cobrou.',
   },
   {
     id: 'orcamento' as const,
