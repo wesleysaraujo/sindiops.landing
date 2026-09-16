@@ -1,6 +1,7 @@
 ---
 import Documento from '../layouts/Documento.astro';
 import { obterControlador } from '../lib/controlador';
+import { APP_HOST } from '../lib/app';
 
 /**
  * Renderizada por requisição, e não no build: a identificação do controlador
@@ -59,7 +60,7 @@ const identificacao = [
 
   <p>
     Ao usar o SindiOps — o site <strong>sindiops.com.br</strong> ou a aplicação
-    <strong>app.sindiops.com.br</strong> — você concorda com estes termos. Se não concordar, não use o serviço.
+    <strong>{APP_HOST}</strong> — você concorda com estes termos. Se não concordar, não use o serviço.
   </p>
 
   <h2>2. O que o serviço faz</h2>

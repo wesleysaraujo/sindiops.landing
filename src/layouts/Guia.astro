@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { WHATSAPP, WHATSAPP_URL } from '../lib/contato';
+import { APP_LABEL, APP_URL } from '../lib/app';
 import Marca from '../components/Marca.astro';
 import Medicao from '../components/Medicao.astro';
 import { dataPorExtenso, type Guia } from '../lib/guias';
@@ -99,9 +100,23 @@ const jsonLd = {
     <header class="border-b border-fiopapel">
       <div class="mx-auto flex w-full max-w-3xl items-center justify-between gap-4 px-5 py-5 md:px-8">
         <a href="/" aria-label="SindiOps, página inicial"><Marca /></a>
-        <a href="/guias" class="text-[0.95rem] underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
-          Todos os guias
-        </a>
+        <!--
+          O guia é a porta de entrada da busca, e quem já é cliente também cai
+          aqui procurando como fazer algo — então o link de entrar precisa
+          existir nesta casca também. Ver `src/lib/app.ts`.
+        -->
+        <div class="flex shrink-0 items-center gap-5">
+          <a href="/guias" class="text-[0.95rem] underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
+            Todos os guias
+          </a>
+          <a
+            href={APP_URL}
+            data-rastrear="entrar-topo"
+            class="text-[0.95rem] font-semibold text-tinta underline decoration-caneta decoration-2 underline-offset-4 transition-colors hover:text-caneta"
+          >
+            {APP_LABEL}
+          </a>
+        </div>
       </div>
     </header>
 
@@ -167,6 +182,13 @@ const jsonLd = {
 
         <nav class="flex flex-wrap gap-x-5 gap-y-2">
           <a href="/guias" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">Guias</a>
+          <a
+            href={APP_URL}
+            data-rastrear="entrar-rodape"
+            class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+          >
+            Entrar no sistema
+          </a>
           <a href="/termos" class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta">
             Termos de uso
           </a>
