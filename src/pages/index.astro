@@ -5,7 +5,7 @@ import Marca from '../components/Marca.astro';
 import Demo from '../components/Demo.astro';
 import Medicao from '../components/Medicao.astro';
 import { EMAIL, EMAIL_URL, WHATSAPP, WHATSAPP_URL } from '../lib/contato';
-import { APP_LABEL, APP_URL } from '../lib/app';
+import { APP_BOTAO, APP_LABEL, APP_LABEL_CURTO, APP_URL } from '../lib/app';
 
 // SindiOps — landing de acesso antecipado.
 // Página 100% estática (SEO): o HTML sai pronto do build.
@@ -265,20 +265,20 @@ const jsonLd = {
           procura por isso em qualquer produto, e é a primeira coisa que a
           pessoa varre quando volta.
 
-          **Link de texto, nunca botão preenchido.** A página tem uma única
-          pergunta — "quero acesso antecipado" —, e um segundo botão do mesmo
-          peso a transformaria em duas. Quem tem conta procura este link e o
-          acha pequeno; quem não tem não sabe o que é "Entrar" e continua
-          descendo para a oferta. `data-rastrear` separa os dois no GTM: clique
-          aqui é cliente voltando, não lead novo.
+          **Contornado, nunca preenchido, e o rótulo auto-seleciona.** A
+          primeira versão era um link de texto e ficou sutil demais: mesmo peso
+          de "Todos os guias", num canto onde se procura um botão. A borda faz
+          o olho reconhecer um controle; o fundo vazio o mantém abaixo do
+          "Quero acesso antecipado", que é a única pergunta da página. E "Já
+          tenho conta" diz a quem serve — visitante novo lê e segue descendo,
+          em vez de bater numa tela de login. Estilo e rótulos em
+          `src/lib/app.ts`; `data-rastrear` separa os dois no GTM, porque
+          clique aqui é cliente voltando, não lead novo.
         -->
-        <a
-          href={APP_URL}
-          data-rastrear="entrar-topo"
-          class="shrink-0 text-[0.95rem] font-semibold text-tinta underline decoration-caneta decoration-2 underline-offset-4 transition-colors hover:text-caneta"
-        >
-          {APP_LABEL}
-        </a>
+        <a href={APP_URL} data-rastrear="entrar-topo" class={APP_BOTAO}>
+            <span class="sm:hidden">{APP_LABEL_CURTO}</span>
+            <span class="hidden sm:inline">{APP_LABEL}</span>
+          </a>
       </div>
     </header>
 

@@ -1,7 +1,7 @@
 ---
 import '../../styles/global.css';
 import { EMAIL, EMAIL_URL, WHATSAPP, WHATSAPP_URL } from '../../lib/contato';
-import { APP_LABEL, APP_URL } from '../../lib/app';
+import { APP_BOTAO, APP_LABEL, APP_LABEL_CURTO, APP_URL } from '../../lib/app';
 import Marca from '../../components/Marca.astro';
 import Medicao from '../../components/Medicao.astro';
 import { agrupadosPorFrente, guiasPublicados } from '../../lib/guias';
@@ -72,12 +72,9 @@ const url = 'https://www.sindiops.com.br/guias';
         <a href="/" aria-label="SindiOps, página inicial"><Marca /></a>
         <!-- A porta de quem já tem conta, como nas outras cascas. Ver `src/lib/app.ts`. -->
         <div class="flex shrink-0 items-center gap-5">
-          <a
-            href={APP_URL}
-            data-rastrear="entrar-topo"
-            class="text-[0.95rem] font-semibold text-tinta underline decoration-caneta decoration-2 underline-offset-4 transition-colors hover:text-caneta"
-          >
-            {APP_LABEL}
+          <a href={APP_URL} data-rastrear="entrar-topo" class={APP_BOTAO}>
+            <span class="sm:hidden">{APP_LABEL_CURTO}</span>
+            <span class="hidden sm:inline">{APP_LABEL}</span>
           </a>
           <a
             href="/#acesso"
