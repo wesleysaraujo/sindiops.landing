@@ -46,6 +46,7 @@ const jsonLd = {
   publisher: { '@id': 'https://www.sindiops.com.br/#organizacao' },
   isPartOf: { '@type': 'WebSite', name: 'SindiOps', url: 'https://www.sindiops.com.br' },
 };
+import CreditoTechBlues from '../components/CreditoTechBlues.astro';
 ---
 
 <!doctype html>
@@ -175,6 +176,7 @@ const jsonLd = {
         <div>
           <Marca tamanho="padrao" />
           <p class="mt-1">Apoio à decisão do síndico. Não substitui orientação jurídica.</p>
+          <CreditoTechBlues class="mt-1" />
         </div>
 
         <nav class="flex flex-wrap gap-x-5 gap-y-2">

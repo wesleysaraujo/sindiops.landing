@@ -1,0 +1,25 @@
+---
+/**
+ * Crédito da TechBlues, a empresa que faz o SindiOps.
+ *
+ * Um componente só para os quatro rodapés (home, guias, documentos legais):
+ * escrito à mão em cada um, o texto e o endereço divergiriam na primeira
+ * mexida. Abre em outra aba porque quem clica aqui está no meio da página do
+ * SindiOps e não pediu para sair dela.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: classe = '' } = Astro.props;
+---
+
+<p class:list={['text-[0.85rem] text-grafite', classe]}>
+  Um produto
+  <a
+    href="https://www.techblues.com.br"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="underline decoration-caneta decoration-2 underline-offset-2 text-tinta"
+  >TechBlues Automações</a>.
+</p>
