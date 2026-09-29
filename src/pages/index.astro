@@ -37,6 +37,10 @@ const faq = [
     r: 'Você faz — e recebe um texto bem escrito que ninguém consegue conferir. Aqui a diferença não é o modelo, é onde ele não decide: resposta sem trecho encontrado na sua convenção vira “não encontrei”, valor de proposta cuja linha não existe no arquivo é descartado, a nota de cada orçamento é uma conta que você refaz no papel, e nada pontua sem você confirmar. Num chat genérico, quando o conselho perguntar de onde saiu o número, a resposta é “a inteligência artificial disse”.',
   },
   {
+    p: 'Posso usar o SindiOps de dentro do Claude, do ChatGPT ou de outro assistente?',
+    r: 'Pode. O SindiOps disponibiliza um servidor MCP (Model Context Protocol) oficial. Você conecta o assistente que já usa no dia a dia e faz a pergunta direto de lá — “o que a convenção diz sobre reformas?”, “confira o reajuste deste contrato”. As respostas continuam vindo com a citação do artigo, da cláusula e da página do documento original. O acesso é 100% somente leitura: nenhum assistente pode alterar cadastros, assinar ou enviar notificações por você, e você revoga o acesso a qualquer momento em um clique.',
+  },
+  {
     p: 'E os contratos que já estão em andamento?',
     r: 'É o caso mais comum, e é onde ele mais serve: você sobe a pasta e, numa tarde, sabe o que vence, quanto custa e o que renova sozinho. O sistema lê cada contrato — com os aditivos, que continuam valendo junto com o original — e monta a ficha: objeto, valor, vigência, aviso prévio, índice de reajuste. Cada campo vem com a cláusula que o sustenta, e você confere um por um.',
   },
@@ -149,6 +153,7 @@ const jsonLd = {
         'Comparativo, parecer e registro da decisão de contratação',
         'Consulta à convenção e ao regimento com citação do artigo e da página',
         'Geração de circular, notificação e advertência fundamentadas',
+        'Servidor MCP oficial: consulte convenções, contratos e orçamentos direto no Claude, ChatGPT ou outros assistentes',
       ],
     },
     {
@@ -301,6 +306,10 @@ import CreditoTechBlues from '../components/CreditoTechBlues.astro';
       -->
       <section class="mx-auto grid w-full max-w-6xl gap-12 px-5 pt-10 pb-16 md:px-8 md:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
         <div class="max-w-xl">
+          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-fiopapel bg-white px-3.5 py-1 text-[0.82rem] font-medium text-grafite shadow-xs">
+            <span class="h-2 w-2 rounded-full bg-caneta"></span>
+            <span>Novo: Conecte o acervo ao Claude, ChatGPT e assistentes via MCP</span>
+          </div>
           <h1 class="font-display text-[2rem] leading-[1.15] font-extrabold text-balance md:text-[2.9rem]">
             O dinheiro do condomínio sai todo mês. <span class="text-caneta">Você consegue justificar cada saída?</span>
           </h1>
@@ -974,7 +983,93 @@ import CreditoTechBlues from '../components/CreditoTechBlues.astro';
         </p>
       </section>
 
-      <!-- ============ 10. Para quem é ============ -->
+      <!-- ============ 10. Servidor MCP: o acervo onde a conversa nasce ============ -->
+      <!--
+        O servidor MCP (Model Context Protocol): conecta o assistente que o
+        síndico já usa (Claude, ChatGPT, Cursor, etc.) ao acervo do condomínio,
+        mantendo a regra estruturante — o acesso é somente leitura e toda
+        resposta carrega o trecho literal que a sustenta.
+      -->
+      <section class="border-y border-fiopapel bg-white">
+        <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
+          <p class="font-protocolo text-[0.82rem] font-bold tracking-wide text-caneta uppercase">
+            Integração · Servidor MCP
+          </p>
+          <h2 class="mt-3 font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
+            De dentro do Claude, do ChatGPT ou do seu assistente de preferência
+          </h2>
+          <p class="mt-5 max-w-prose text-lg">
+            Você já passa o dia escrevendo uma circular, montando uma resposta ao conselho ou redigindo um e-mail no
+            assistente que usa no dia a dia. A dúvida surge ali mesmo: <em>“o que a convenção do Aurora diz sobre obra no
+            sábado?”</em>, <em>“qual o índice de reajuste do elevador?”</em>.
+          </p>
+          <p class="mt-4 max-w-prose">
+            O SindiOps publica um <strong>servidor MCP (Model Context Protocol)</strong> oficial. Você conecta o
+            assistente que já usa — <strong>Claude</strong>, <strong>ChatGPT</strong>, <strong>Cursor</strong> ou
+            qualquer agente compatível — e pergunta pelo acervo dos seus condomínios sem trocar de janela e sem abrir o
+            sistema.
+          </p>
+
+          <!-- Figura da conversa com MCP -->
+          <figure class="mt-9 m-0" aria-label="Exemplo de consulta via MCP: o assistente responde citando o artigo e a folha da convenção">
+            <div class="rounded-sm border border-fiopapel bg-papel p-5 shadow-[0_1px_3px_rgba(28,30,34,0.08)] md:p-6">
+              <div class="flex items-center justify-between border-b border-fiopapel pb-3 text-xs font-protocolo text-grafite">
+                <span class="font-bold uppercase tracking-wider text-caneta">No seu assistente (Claude · ChatGPT · Cursor)</span>
+                <span>Conector SindiOps MCP</span>
+              </div>
+
+              <!-- Mensagem do usuário no assistente -->
+              <div class="mt-4 ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-tinta px-4 py-2.5 text-[0.95rem] text-papel">
+                “O que a convenção do Edifício Aurora define sobre reformas no sábado?”
+              </div>
+
+              <!-- Resposta gerada com a ferramenta MCP -->
+              <div class="mt-4 max-w-[92%] rounded-2xl rounded-bl-sm border border-fiopapel bg-white px-5 py-4 shadow-xs">
+                <div class="mb-2 flex items-center gap-1.5 font-protocolo text-[0.78rem] text-grafite">
+                  <span class="inline-block h-2 w-2 rounded-full bg-caneta"></span>
+                  <span>ferramenta <code class="font-mono text-caneta font-semibold">consultar_convencao</code> chamada</span>
+                </div>
+                <p class="text-[0.98rem]">
+                  Segundo a convenção do <strong>Edifício Aurora</strong>, obras que produzam ruído só podem ocorrer de
+                  <strong>segunda a sexta, das 8h às 17h</strong>. A execução de obras aos sábados, domingos e feriados
+                  é proibida e sujeita à advertência e multa.
+                </p>
+                <p class="mt-3">
+                  <span class="inline-block rounded border border-caneta bg-papel px-2.5 py-1 font-protocolo text-[0.85rem] font-bold text-caneta">
+                    Art. 9º, §1º · fls. 34 · versão vigente
+                  </span>
+                </p>
+              </div>
+            </div>
+          </figure>
+
+          <dl class="mt-9 space-y-6">
+            <div class="border-l-[3px] border-caneta pl-4">
+              <dt class="font-bold text-base text-tinta">Acesso 100% somente leitura.</dt>
+              <dd class="mt-1 text-[0.95rem] text-grafite">
+                Nenhum aplicativo conectado pode subir documento, publicar edital, finalizar notificação ou registrar
+                despesas. Toda escrita continua exigindo sua confirmação na tela do SindiOps.
+              </dd>
+            </div>
+            <div class="border-l-[3px] border-caneta pl-4">
+              <dt class="font-bold text-base text-tinta">Toda citação é auditável.</dt>
+              <dd class="mt-1 text-[0.95rem] text-grafite">
+                Quem redige o texto da resposta é o assistente, mas o trecho consultado é literal do documento do
+                condomínio — pronto para você abrir o arquivo e conferir o artigo original.
+              </dd>
+            </div>
+            <div class="border-l-[3px] border-caneta pl-4">
+              <dt class="font-bold text-base text-tinta">Isolamento e revogação imediata.</dt>
+              <dd class="mt-1 text-[0.95rem] text-grafite">
+                O assistente enxerga apenas os condomínios aos quais o seu usuário tem acesso. Você pode cortar a conexão
+                a qualquer momento em um clique na central de ajuda.
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ============ 11. Para quem é ============ -->
       <section class="border-y border-fiopapel bg-white">
         <div class="mx-auto w-full max-w-3xl px-5 py-14 md:px-8 md:py-20">
           <h2 class="font-display text-[1.6rem] font-bold text-balance md:text-[2rem]">
